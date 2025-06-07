@@ -2,19 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>IWO TTRPG Hub - Independent Wanderers Organization</title>
+  <title>Welcome to the IWO TTRPG Hub</title>
   <link rel="stylesheet" href="style.css">
+  <script defer>
+    function toggleMenu() {
+      const menu = document.getElementById("nav-links");
+      menu.classList.toggle("visible");
+    }
+  </script>
 </head>
 <body>
+  <div class="navbar">
+    <button onclick="toggleMenu()" class="menu-button">☰ Menu</button>
+    <div id="nav-links" class="nav-links">
+      <a href="https://www.dndbeyond.com/campaigns/6285329" target="_blank">A Herd of Trouble</a>
+      <a href="https://discord.com/" target="_blank">IWO Discord Server</a>
+      <a href="#">Wiki / Lore (coming soon)</a>
+    </div>
+  </div>
+
   <div class="container">
     <h1>Welcome to the IWO TTRPG Hub</h1>
     <p>Your portal to adventures past, present, and future.</p>
-    
-    <ul class="links">
-      <li><a href="https://www.dndbeyond.com/campaigns/6285329" target="_blank">A Herd of Trouble</a></li>
-      <li><a href="https://discord.com/channels/613017809588322305/613017809588322307" target="_blank">IWO Discord Server</a></li>
-      <li><a href="#">Wiki / Lore (coming soon)</a></li>
-    </ul>
   </div>
 </body>
 </html>

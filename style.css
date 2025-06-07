@@ -1,39 +1,45 @@
-body {
-  font-family: Georgia, serif;
-  background-image: url('LoxPartyBackground.png');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+/* Navbar styling */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  text-align: left;
+  padding: 10px 20px;
+  z-index: 1000;
+}
+
+.menu-button {
+  font-size: 1.2em;
   color: #f5f5f5;
-  text-align: center;
-  margin: 0;
-  padding: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.container {
-  max-width: 1000px;
-  margin: auto;
-  background-color: rgba(0, 0, 0, 0.6); /* Soft dark background for readability */
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); /* Optional: subtle glow effect */
+.nav-links {
+  display: none;
+  flex-direction: column;
+  margin-top: 10px;
 }
 
-.links {
-  list-style: none;
-  padding: 0;
-}
-
-.links li {
-  margin: 16px 0;
-}
-
-a {
+.nav-links a {
   color: #87ceeb;
   text-decoration: none;
-  font-size: 1.2em;
+  padding: 6px 0;
+  display: block;
 }
 
-a:hover {
+.nav-links a:hover {
   text-decoration: underline;
+}
+
+/* Show the menu when toggled */
+.nav-links.visible {
+  display: flex;
+}
+
+/* Adjust top padding to account for navbar */
+body {
+  padding-top: 70px;
 }

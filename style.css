@@ -56,13 +56,18 @@ body {
 
 /* === Main Content Box === */
 .container {
-  max-width: 600px; /* Narrower width */
-  margin: 110px auto 0 auto; /* Just below the navbar */
-  background-color: rgba(0, 0, 0, 0.6); /* Soft shadow */
+  max-width: 600px;
+  background-color: rgba(0, 0, 0, 0.6);
   padding: 20px 30px;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
   text-align: center;
+
+  /* New positioning */
+  position: absolute;
+  top: 120px; /* Adjust up/down to place it in the sky */
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* Optional: link styles inside content (if any) */

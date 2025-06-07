@@ -3,9 +3,10 @@
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  text-align: left;
+  background-color: rgba(0, 0, 0, 0.85);
   padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
   z-index: 1000;
 }
 
@@ -15,31 +16,40 @@
   background: none;
   border: none;
   cursor: pointer;
+  align-self: flex-start;
+  margin-bottom: 5px;
 }
 
 .nav-links {
   display: none;
   flex-direction: column;
-  margin-top: 10px;
+}
+
+.nav-links.visible {
+  display: flex;
 }
 
 .nav-links a {
   color: #87ceeb;
   text-decoration: none;
-  padding: 6px 0;
-  display: block;
+  padding: 5px 0;
 }
 
 .nav-links a:hover {
   text-decoration: underline;
 }
 
-/* Show the menu when toggled */
-.nav-links.visible {
-  display: flex;
+/* Make room for the navbar */
+body {
+  padding-top: 100px; /* Adjust if needed */
 }
 
-/* Adjust top padding to account for navbar */
-body {
-  padding-top: 70px;
+/* Shift the container lower */
+.container {
+  max-width: 800px;
+  margin: 150px auto 0 auto; /* Push down from top */
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
 }

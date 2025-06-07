@@ -1,6 +1,6 @@
 body {
   font-family: Georgia, serif;
-  background-image: url('LoxPartyBackground.png'); /* Update with your file name */
+  background-image: url('LoxPartyBackground.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -8,4 +8,32 @@ body {
   text-align: center;
   margin: 0;
   padding: 40px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  background-color: rgba(0, 0, 0, 0.6); /* Soft dark background for readability */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); /* Optional: subtle glow effect */
+}
+
+.links {
+  list-style: none;
+  padding: 0;
+}
+
+.links li {
+  margin: 10px 0;
+}
+
+a {
+  color: #87ceeb;
+  text-decoration: none;
+  font-size: 1.2em;
+}
+
+a:hover {
+  text-decoration: underline;
 }

@@ -1,4 +1,18 @@
-/* Navbar styling */
+/* === Global Styles === */
+body {
+  font-family: Georgia, serif;
+  background-image: url('LoxPartyBackground.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #f5f5f5;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  padding-top: 100px; /* Make room for fixed navbar */
+}
+
+/* === Navbar === */
 .navbar {
   position: fixed;
   top: 0;
@@ -23,6 +37,7 @@
 .nav-links {
   display: none;
   flex-direction: column;
+  margin-top: 5px;
 }
 
 .nav-links.visible {
@@ -39,17 +54,23 @@
   text-decoration: underline;
 }
 
-/* Make room for the navbar */
-body {
-  padding-top: 100px; /* Adjust if needed */
-}
-
-/* Shift the container lower */
+/* === Main Content Box === */
 .container {
   max-width: 800px;
-  margin: 150px auto 0 auto; /* Push down from top */
-  background-color: rgba(0, 0, 0, 0.6);
+  margin: 150px auto 0 auto; /* Push down below navbar */
+  background-color: rgba(0, 0, 0, 0.6); /* Soft dark overlay */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Optional: link styles inside content (if any) */
+a {
+  color: #87ceeb;
+  text-decoration: none;
+  font-size: 1.2em;
+}
+
+a:hover {
+  text-decoration: underline;
 }

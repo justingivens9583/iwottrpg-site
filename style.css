@@ -56,12 +56,13 @@ body {
 
 /* === Main Content Box === */
 .container {
-  max-width: 800px;
-  margin: 150px auto 0 auto; /* Push down below navbar */
-  background-color: rgba(0, 0, 0, 0.6); /* Soft dark overlay */
-  padding: 20px;
+  max-width: 600px; /* Narrower width */
+  margin: 110px auto 0 auto; /* Just below the navbar */
+  background-color: rgba(0, 0, 0, 0.6); /* Soft shadow */
+  padding: 20px 30px;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  text-align: center;
 }
 
 /* Optional: link styles inside content (if any) */

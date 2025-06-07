@@ -4,16 +4,10 @@
   <meta charset="UTF-8">
   <title>Welcome to the IWO TTRPG Hub</title>
   <link rel="stylesheet" href="style.css">
-  <script defer>
-    function toggleMenu() {
-      const menu = document.getElementById("nav-links");
-      menu.classList.toggle("visible");
-    }
-  </script>
 </head>
 <body>
   <div class="navbar">
-    <button onclick="toggleMenu()" class="menu-button">☰ Menu</button>
+    <button class="menu-button" onclick="toggleMenu()">☰ Menu</button>
     <div id="nav-links" class="nav-links">
       <a href="https://www.dndbeyond.com/campaigns/6285329" target="_blank">A Herd of Trouble</a>
       <a href="https://discord.com/" target="_blank">IWO Discord Server</a>
@@ -25,5 +19,12 @@
     <h1>Welcome to the IWO TTRPG Hub</h1>
     <p>Your portal to adventures past, present, and future.</p>
   </div>
+
+  <script>
+    function toggleMenu() {
+      const navLinks = document.getElementById("nav-links");
+      navLinks.classList.toggle("visible");
+    }
+  </script>
 </body>
 </html>

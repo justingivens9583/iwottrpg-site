@@ -1,7 +1,7 @@
 /* === Global Styles === */
 body {
   font-family: Georgia, serif;
-  background-image: url('LoxPartyBackground.png');
+  background-image: url('Tyranny of Dragons Cover.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -80,3 +80,4 @@ a {
 a:hover {
   text-decoration: underline;
 }
+

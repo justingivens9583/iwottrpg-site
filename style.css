@@ -33,22 +33,19 @@ body {
 }
 
 .nav-links {
-  display: flex;
-  flex-direction: column;
+  text-align: center;
   margin-top: 20px;
+  font-size: 24px;
 }
 
 .nav-links a {
-  color: #87ceeb;
+  color: #fff;
+  margin: 0 20px;
   text-decoration: none;
-  padding: 10px 0;
-  text-align: left;
-  font-size: 1.1em;
 }
 
 .nav-links a:hover {
   text-decoration: underline;
-  color: #ffffff;
 }
 
 /* === Main Content Box === */
@@ -178,3 +175,4 @@ nav a {
     max-width: 100%;
   }
 }
+

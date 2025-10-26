@@ -50,7 +50,7 @@ body {
 
 /* === Main Content Box === */
 .container {
-  max-width: 900px;
+  max-width: 600px;
   background-color: rgba(0, 0, 0, 0.6);
   padding: 20px 30px;
   border-radius: 8px;
@@ -175,4 +175,5 @@ nav a {
     max-width: 100%;
   }
 }
+
 

@@ -137,3 +137,42 @@ nav a {
   box-shadow: 0 0 15px rgba(0,0,0,0.4);
 }
 
+/* Holds the text + image side-by-side */
+.bio-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+/* Limits text width so it doesn't stretch full screen */
+.bio-text {
+  max-width: 600px;
+}
+
+/* Image box styling */
+.bio-image-box {
+  background: rgba(0, 0, 0, 0.55); /* optional but sexy */
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Image itself */
+.bio-image-box img {
+  width: 280px;
+  border-radius: 8px;
+}
+
+/* Mobile-friendly stacking */
+@media (max-width: 900px) {
+  .bio-wrapper {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .bio-text {
+    max-width: 100%;
+  }
+}

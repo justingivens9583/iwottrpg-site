@@ -119,3 +119,21 @@ nav a {
   padding: 8px 12px;
 }
 
+.bio-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap; /* allows stacking on small screens */
+}
+
+.bio-text {
+  max-width: 600px;
+}
+
+.bio-image {
+  width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+

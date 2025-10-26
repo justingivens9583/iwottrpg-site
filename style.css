@@ -67,3 +67,33 @@ body {
   transform: translate(-50%, -50%);
 }
 
+.character-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.character-card {
+  background: rgba(0, 0, 0, 0.65);
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  width: 150px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+}
+
+.character-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.character-card:hover {
+  transform: scale(1.05);
+  background: rgba(0, 0, 0, 0.75);
+}
+

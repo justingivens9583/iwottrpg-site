@@ -53,12 +53,13 @@ body {
 
 /* === Main Content Box === */
 .container {
-  max-width: 600px;
+  max-width: 900px;
   background-color: rgba(0, 0, 0, 0.6);
   padding: 20px 30px;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
   text-align: center;
+}
 
   /* Centering magic */
   position: absolute;
@@ -140,6 +141,7 @@ nav a {
 /* Holds the text + image side-by-side */
 .bio-wrapper {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   gap: 30px;
   align-items: flex-start;
@@ -147,29 +149,29 @@ nav a {
 
 /* Limits text width so it doesn't stretch full screen */
 .bio-text {
-  max-width: 600px;
+  max-width: 60%;
 }
 
 /* Image box styling */
 .bio-image-box {
-  background: rgba(0, 0, 0, 0.55); /* optional but sexy */
+  background: rgba(0, 0, 0, 0.55);
   padding: 10px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  flex-shrink: 0; /* stops picture from shrinking */
 }
 
 /* Image itself */
 .bio-image-box img {
-  width: 280px;
+  width: 240px;
   border-radius: 8px;
 }
 
 /* Mobile-friendly stacking */
+/* Mobile fallback */
 @media (max-width: 900px) {
   .bio-wrapper {
     flex-direction: column;
     align-items: center;
-    text-align: center;
   }
 
   .bio-text {

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zurak - Character Bio</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <a href="index.html">Home</a>
+  <a href="current-characters.html" class="active">Back to Characters</a>
+</div>
+
+<div class="bio-container">
+  <img class="bio-portrait" src="images/lucyana.jpeg" alt="Lucyana">
+
+  <h1>Lucyana Orilith</h1>
+  <p><strong>Class:</strong> Warlock (Peace Domain)</p>
+  <p><strong>Race:</strong> Tiefling</p>
+
+  <h2>Backstory</h2>
+  <p>
+Talented leather worker and is just all around a nice person. She's made quite a living for herself in the BDSM community with her quality work and friendly demeanor. She met Idris and fell hard without realizing he was a deity. He had never been with a mortal and was quite surprised to find out how very fragile they are and it stresses him out. He imbibes her with magic and gives her a ring that is his secret amulet that enables him to enter a pact linking them. She knows, but lets him think it's still a secret because she thinks it's cute.
+  </p>
+</div>
+
+</body>
+</html>

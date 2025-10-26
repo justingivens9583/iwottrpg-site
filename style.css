@@ -60,8 +60,9 @@ body {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
   text-align: center;
 
-  /* Position shifted right so it’s not behind sidebar */
+  /* Centering magic */
   position: absolute;
-  top: 80px; 
-  left: 260px; /* Sidebar width + spacing */
+  top: 50%;
+  left: calc(50% + 100px); /* Add half the sidebar width */
+  transform: translate(-50%, -50%);
 }

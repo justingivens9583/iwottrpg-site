@@ -6,27 +6,23 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- === Side Navbar === -->
   <div class="navbar">
-    <button class="menu-button" onclick="toggleMenu()">☰ Menu</button>
-    <div id="nav-links" class="nav-links">
+    <div class="nav-links">
       <a href="http://foundry.iwottrpg.com:30000/">Foundry</a>
       <a href="https://discord.com/" target="_blank">IWO Discord Server</a>
       <a href="/wiki/index.html">Wiki / Lore</a>
+      <a href="/wiki/characters.html">Characters</a>
+      <a href="/contact.html">Contact</a>
     </div>
   </div>
 
+  <!-- === Main Page Content === -->
   <div class="container">
     <h1>Welcome to the IWO TTRPG Hub</h1>
     <p>Your portal to adventures past, present, and future.</p>
   </div>
 
-  <script>
-    function toggleMenu() {
-      const navLinks = document.getElementById("nav-links");
-      navLinks.classList.toggle("visible");
-    }
-  </script>
 </body>
 </html>
-
-

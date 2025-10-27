@@ -64,11 +64,9 @@ body {
   text-align: center;
 }
 
-  /* Centering magic */
-  position: absolute;
-  top: 25%;
-  left: calc(50% + 100px); /* Add half the sidebar width */
-  transform: translate(-50%, -50%);
+.container {
+  margin-left: 240px; /* Sidebar width + padding */
+  margin-top: 40px;
 }
 
 .character-grid {
@@ -181,6 +179,7 @@ nav a {
     max-width: 100%;
   }
 }
+
 
 
 

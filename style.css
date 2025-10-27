@@ -17,7 +17,7 @@ body {
   top: 0;
   left: 0;
   height: 100%;
-  width: 220px;
+  width: max-content;
   background-color: rgba(0, 0, 0, 0.85);
   padding-top: 20px;
   padding-left: 15px;
@@ -28,8 +28,10 @@ body {
 }
 
 .navbar a {
+  color: #fff;
   display: block;
   margin: 10px 0;
+  text-decoration: none;
   white-space: nowrap;
 }
 
@@ -64,7 +66,7 @@ body {
   text-align: center;
 
   /* NEW FIXES */
-  margin-left: 260px; /* Sidebar width + padding */
+  margin-left: calc(100px + 6vw); /* Sidebar width + padding */
   margin-top: 60px;   /* Push content down a little */
 }
 
@@ -185,6 +187,7 @@ nav a {
     max-width: 100%;
   }
 }
+
 
 
 

@@ -27,6 +27,12 @@ body {
   z-index: 1000;
 }
 
+.navbar a {
+  display: block;
+  margin: 10px 0;
+  white-space: nowrap;
+}
+
 /* Hide the menu-button on desktop since the menu is always visible */
 .menu-button {
   display: none;
@@ -175,5 +181,6 @@ nav a {
     max-width: 100%;
   }
 }
+
 
 

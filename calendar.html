@@ -14,50 +14,43 @@
   <div class="calendar-container">
     <h1>Campaign Calendar</h1>
 
-  <iframe 
-    src="https://calendar.google.com/calendar/embed?src=fbb301e8fca5a2e89e759fd5180fbdedaf85ee93669b71082eb3d56c38832b50%40group.calendar.google.com&ctz=America%2FChicago&mode=MONTH"
-    style="border:0"
-    width="800"
-    height="600"
-    frameborder="0"
-    scrolling="no">
-  </iframe>
-
+    <iframe 
+      src="https://calendar.google.com/calendar/embed?src=fbb301e8fca5a2e89e759fd5180fbdedaf85ee93669b71082eb3d56c38832b50%40group.calendar.google.com&ctz=America%2FChicago&mode=MONTH"
+      style="border:0"
+      width="800"
+      height="600"
+      frameborder="0"
+      scrolling="no">
+    </iframe>
   </div>
   
-<div class="countdown-box">
-  <h2>Next Session Countdown</h2>
-  <p id="countdown">Loading...</p>
-</div>
+  <div class="countdown-box">
+    <h2>Next Session Countdown</h2>
+    <p id="countdown">Loading...</p>
+  </div>
 
+  <script>
+    const targetDate = new Date("November 22, 2025 21:00:00 CST").getTime();
 
-<script>
-  const targetDate = new Date("November 22, 2025 21:00:00 CST").getTime();
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const diff = targetDate - now;
 
-  const timer = setInterval(() => {
-    const now = new Date().getTime();
-    const diff = targetDate - now;
+      if (diff <= 0) {
+        document.getElementById("countdown").innerText = "Session in progress or completed!";
+        clearInterval(timer);
+        return;
+      }
 
-    if (diff <= 0) {
-      document.getElementById("countdown").innerText = "Session in progress or completed!";
-      clearInterval(timer);
-      return;
-    }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      document.getElementById("countdown").innerText =
+        `${days}d ${hours}h ${minutes}m ${seconds}s remaining`;
+    }, 1000);
+  </script>
 
-    document.getElementById("countdown").innerText =
-      `${days}d ${hours}h ${minutes}m ${seconds}s remaining`;
-  }
-
-    updateCountdown(); // Run once immediately
-    setInterval(updateCountdown, 1000); // Update every second
-</script>
-
-
-  
 </body>
 </html>

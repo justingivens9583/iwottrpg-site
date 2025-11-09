@@ -209,6 +209,31 @@ nav a {
   border-radius: 8px;
 }
 
+/* === Countdown Shadow Box === */
+.countdown-box {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+  padding: 20px 30px;
+  margin: 20px auto;
+  max-width: 400px;
+  text-align: center;
+  color: #ffffff;
+  font-family: Georgia, serif;
+}
+
+.countdown-box h2 {
+  margin-bottom: 10px;
+  font-size: 1.8em;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+#countdown {
+  font-size: 1.6em;
+  font-weight: bold;
+  color: #ffcc00;
+}
+
 
 
 

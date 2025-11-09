@@ -194,6 +194,20 @@ nav a {
   }
 }
 
+/* === Calendar Styling === */
+.calendar-container {
+  position: relative;
+  display: inline-block;
+  background-color: #121212; /* dark background */
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.calendar-container iframe {
+  filter: invert(1) hue-rotate(180deg); /* simulate dark mode */
+  border-radius: 8px;
+}
 
 
 

@@ -21,6 +21,10 @@
     <button onclick="switchDoc('sydney')">Sydney</button>
     <button onclick="switchDoc('summary')">Session Summaries</button>
   </div>
+  
+  <div class="open-doc-button">
+  <button id="openDocBtn" onclick="openDoc()">Open Full Document</button>
+  </div>
 
   <iframe 
     id="notesFrame"
@@ -51,6 +55,13 @@
 
     // Load the first tab by default
     switchDoc("summary");
+
+    function openDoc() {
+  const frame = document.getElementById("notesFrame");
+  const url = frame.src.replace("/preview", "/edit");
+  window.open(url, "_blank");
+}
+
   </script>
 
 </body>

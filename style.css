@@ -235,14 +235,28 @@ nav a {
 }
 
 
+.notes-container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
 
+.note-tabs {
+  margin-bottom: 15px;
+}
 
+.note-tabs button {
+  background: #333;
+  color: white;
+  border: 1px solid #555;
+  padding: 10px 18px;
+  margin-right: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 16px;
+}
 
-
-
-
-
-
-
-
-
+.note-tabs button:hover {
+  background: #555;
+}

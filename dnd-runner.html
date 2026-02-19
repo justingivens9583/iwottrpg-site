@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Endless Dungeon — Runner</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --dark: #0d0a06;
+    --parchment: #f5e6c8;
+    --blood: #8b1a1a;
+    --stone: #3a3028;
+    --stone-light: #5a4a3a;
+    --glow: rgba(201,168,76,0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    font-family: 'Crimson Text', Georgia, serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; width: 100vw; height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ── CHARACTER SELECT ── */
+  #selectScreen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, #1a1208 0%, #0d0a06 70%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  #selectScreen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(201,168,76,0.03) 60px, rgba(201,168,76,0.03) 61px),
+      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(201,168,76,0.03) 60px, rgba(201,168,76,0.03) 61px);
+  }
+
+  .title-block {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .title-block .eyebrow {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(28px, 5vw, 56px);
+    font-weight: 900;
+    color: var(--gold-light);
+    text-shadow: 0 0 40px var(--glow), 0 2px 0 #5a3a00;
+    line-height: 1.1;
+  }
+
+  h1 span {
+    display: block;
+    font-size: 0.45em;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 3px;
+    opacity: 0.8;
+  }
+
+  .divider {
+    width: 240px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 16px auto;
+    position: relative;
+  }
+  .divider::before {
+    content: '⚔';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #1a1208;
+    padding: 0 10px;
+    color: var(--gold);
+    font-size: 14px;
+  }
+
+  .select-prompt {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0.8;
+  }
+
+  .character-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 900px;
+    padding: 0 20px;
+  }
+
+  .char-card {
+    width: 130px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s, filter 0.2s;
+  }
+
+  .char-card:hover { transform: translateY(-6px); }
+  .char-card.selected .card-inner { border-color: var(--gold-light); box-shadow: 0 0 20px var(--glow), inset 0 0 20px rgba(201,168,76,0.1); }
+  .char-card.selected .char-name { color: var(--gold-light); }
+
+  .card-inner {
+    border: 2px solid var(--stone-light);
+    background: linear-gradient(160deg, #1e1812, #0f0c08);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .portrait-area {
+    width: 100%;
+    height: 130px;
+    background: linear-gradient(135deg, #2a2018, #1a1208);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .portrait-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .portrait-placeholder {
+    font-size: 48px;
+    opacity: 0.6;
+  }
+
+  .char-info {
+    padding: 10px;
+    text-align: center;
+    border-top: 1px solid var(--stone);
+  }
+
+  .char-name {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .char-class {
+    font-size: 11px;
+    color: #8a7a60;
+    font-style: italic;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .selected-badge {
+    position: absolute;
+    top: 6px; right: 6px;
+    background: var(--gold);
+    color: var(--dark);
+    font-size: 10px;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 2px;
+    display: none;
+  }
+  .char-card.selected .selected-badge { display: block; }
+
+  .start-btn {
+    margin-top: 36px;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--dark);
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    border: none;
+    padding: 14px 48px;
+    cursor: pointer;
+    border-radius: 3px;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .start-btn.ready {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .start-btn.ready:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.6);
+  }
+
+  /* ── GAME SCREEN ── */
+  #gameScreen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #0d0a06;
+    position: relative;
+  }
+
+  .hud {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 10;
+  }
+
+  .hud-name {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+
+  .hud-score {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-light);
+    font-size: 20px;
+    font-weight: 700;
+    text-shadow: 0 0 20px var(--glow);
+    text-align: center;
+  }
+
+  .hud-score .label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    display: block;
+    opacity: 0.7;
+  }
+
+  .hud-best {
+    font-family: 'Cinzel', serif;
+    color: #8a7a60;
+    font-size: 12px;
+    text-align: right;
+  }
+
+  canvas {
+    display: block;
+    border: 2px solid var(--stone);
+    box-shadow: 0 0 60px rgba(0,0,0,0.8), 0 0 20px rgba(201,168,76,0.1);
+  }
+
+  .controls-hint {
+    position: absolute;
+    bottom: 16px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: #5a4a3a;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── GAME OVER ── */
+  #overScreen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, #1a0808 0%, #0d0a06 70%);
+  }
+
+  .over-rune {
+    font-size: 60px;
+    margin-bottom: 16px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.95); }
+  }
+
+  .over-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(24px, 4vw, 48px);
+    font-weight: 900;
+    color: var(--blood);
+    text-shadow: 0 0 30px rgba(139,26,26,0.6);
+    margin-bottom: 8px;
+  }
+
+  .over-flavor {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    color: #8a7a60;
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+
+  .over-scores {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid var(--stone-light);
+    border-radius: 4px;
+    padding: 24px 48px;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .over-score-val {
+    font-family: 'Cinzel', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--gold-light);
+    text-shadow: 0 0 20px var(--glow);
+    display: block;
+    line-height: 1;
+  }
+
+  .over-score-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    opacity: 0.6;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .over-best {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: #8a7a60;
+  }
+
+  .over-best strong {
+    color: var(--gold);
+  }
+
+  .new-record {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    color: var(--gold-light);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: rgba(201,168,76,0.15);
+    padding: 4px 16px;
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    margin-top: 8px;
+    display: none;
+  }
+  .new-record.show { display: block; }
+
+  .over-buttons {
+    display: flex;
+    gap: 16px;
+  }
+
+  .btn-retry, .btn-menu {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: none;
+    padding: 12px 32px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .btn-retry {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    color: var(--dark);
+    box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+  }
+
+  .btn-retry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(201,168,76,0.5);
+  }
+
+  .btn-menu {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--stone-light);
+  }
+
+  .btn-menu:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ CHARACTER SELECT -->
+<div id="selectScreen" class="screen active">
+  <div class="title-block">
+    <p class="eyebrow">A Grand Adventure Awaits</p>
+    <h1>The Endless Dungeon<span>∙ Runner ∙</span></h1>
+    <div class="divider"></div>
+  </div>
+
+  <p class="select-prompt">Choose Your Champion</p>
+
+  <div class="character-grid" id="charGrid">
+    <!-- Cards injected by JS -->
+  </div>
+
+  <button class="start-btn" id="startBtn" onclick="startGame()">Begin the Run</button>
+</div>
+
+<!-- ══════════════════════════════════════════ GAME -->
+<div id="gameScreen" class="screen">
+  <div class="hud">
+    <div class="hud-name" id="hudName">—</div>
+    <div class="hud-score">
+      <span class="label">Distance</span>
+      <span id="hudScore">0</span>
+    </div>
+    <div class="hud-best" id="hudBest">Best: 0</div>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+  <p class="controls-hint">Space / Tap — Jump &nbsp;|&nbsp; Double-tap — Double Jump</p>
+</div>
+
+<!-- ══════════════════════════════════════════ GAME OVER -->
+<div id="overScreen" class="screen">
+  <div class="over-rune" id="overRune">💀</div>
+  <h2 class="over-title">You Have Fallen</h2>
+  <p class="over-flavor" id="overFlavor">"The dungeon claims another soul..."</p>
+  <div class="over-scores">
+    <span class="over-score-label">Distance Traveled</span>
+    <span class="over-score-val" id="overScore">0</span>
+    <div class="new-record" id="newRecord">✦ New Record ✦</div>
+    <br>
+    <span class="over-best" id="overBest">Personal Best: <strong>0</strong></span>
+  </div>
+  <div class="over-buttons">
+    <button class="btn-retry" onclick="retryGame()">Try Again</button>
+    <button class="btn-menu" onclick="goMenu()">Choose Hero</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  CONFIGURATION — Edit this section with your players' info!
+// ══════════════════════════════════════════════════════════════
+const CHARACTERS = [
+  {
+    name: "Baradren",
+    charClass: "Ranger",
+    // Replace these paths with your actual image paths relative to your HTML file
+    // e.g. "assets/portraits/aelindra_portrait.png"
+    portrait: "images/baradren.jpeg", // portrait image path
+    sprite:   "images/baradren_full_art.png", // full-body art path
+    emoji: "🏹"   // fallback if no image
+  },
+  {
+    name: "Fuzzy",
+    charClass: "Cleric",
+    portrait: "images/angus.jpeg",
+    sprite: "images/angus_full_art.png",
+    emoji: "✝️"
+  },
+  {
+    name: "Crow",
+    charClass: "Rogue",
+    portrait: "images/crow.jpeg",
+    sprite: "images/crow_full_art.png",
+    emoji: "🗡️"
+  },
+  {
+    name: "Elias",
+    charClass: "Wizard",
+    portrait: "images/elias.jpeg",
+    sprite: "images/elias_full_art.png",
+    emoji: "🔮"
+  },
+  {
+    name: "Farghus",
+    charClass: "Barbarian",
+    portrait: "images/farghus.jpeg",
+    sprite: "images/farghus_full_art.png",
+    emoji: "🪓"
+  }, 
+  {
+    name: "LL",
+    charClass: "Paladin",
+    portrait: "images/gingerbeard.jpeg",
+    sprite: "images/gingerbeard_full_art.png",
+    emoji: "🛡️"
+  },
+  {
+    name: "Lucyana",
+    charClass: "Warlock",
+    portrait: "images/lucyana.jpeg",
+    sprite: "images/lucyana_full_art.png",
+    emoji: "🐙"
+  },
+  {
+    name: "Obadiah",
+    charClass: "Fighter",
+    portrait: "images/obadiah.jpeg",
+    sprite: "images/obadiah_full_art.png",
+    emoji: "⚔️"
+  }, 
+  {
+    name: "Storm Elder",
+    charClass: "Fighter",
+    portrait: "images/older.jpeg",
+    sprite: "images/older_full_art.png",
+    emoji: "⚔️"
+  },
+  {
+    name: "Perkas",
+    charClass: "Wizard",
+    portrait: "images/perkas.jpeg",
+    sprite: "images/perkas_full_art.png",
+    emoji: "🔮"
+  },
+  {
+    name: "Squeak",
+    charClass: "Artificer",
+    portrait: "images/squeak.jpeg",
+    sprite: "images/squeak_full_art.png",
+    emoji: "🔫"
+  },
+  {
+    name: "Storm Younger",
+    charClass: "Barbarian",
+    portrait: "images/younger.jpeg",
+    sprite: "images/younger_full_art.png",
+    emoji: "🪓"
+  },
+  // Add more characters by copying the block above!
+  // {
+  //   name: "YourCharacter",
+  //   charClass: "Class",
+  //   portrait: "path/to/portrait.png",
+  //   sprite: "path/to/fullbody.png",
+  //   emoji: "⚡" 🔮 ✝️ 🪓 🗡️ 🛡️ 🔫 ⚔️ 🐙
+  // },
+];
+
+const DEATH_FLAVORS = [
+  '"The dungeon claims another soul..."',
+  '"Even the brave must fall eventually."',
+  '"Darkness swallows the light."',
+  '"A valiant effort, adventurer."',
+  '"The monsters feast tonight."',
+  '"Retreat! To fight another day."',
+];
+
+// ══════════════════════════════════════════════════════════════
+//  CHARACTER SELECT
+// ══════════════════════════════════════════════════════════════
+let selectedChar = null;
+let bestScores = {};
+
+function buildCharGrid() {
+  const grid = document.getElementById('charGrid');
+  grid.innerHTML = '';
+  CHARACTERS.forEach((c, i) => {
+    const card = document.createElement('div');
+    card.className = 'char-card';
+    card.onclick = () => selectChar(i);
+    card.innerHTML = `
+      <div class="card-inner">
+        <div class="portrait-area">
+          ${c.portrait
+            ? `<img src="${c.portrait}" alt="${c.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+               <div class="portrait-placeholder" style="display:none">${c.emoji}</div>`
+            : `<div class="portrait-placeholder">${c.emoji}</div>`}
+        </div>
+        <div class="char-info">
+          <span class="char-name">${c.name}</span>
+          <span class="char-class">${c.charClass}</span>
+        </div>
+      </div>
+      <div class="selected-badge">Selected</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function selectChar(idx) {
+  selectedChar = idx;
+  document.querySelectorAll('.char-card').forEach((c, i) => {
+    c.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('startBtn').classList.add('ready');
+}
+
+buildCharGrid();
+
+// ══════════════════════════════════════════════════════════════
+//  GAME ENGINE
+// ══════════════════════════════════════════════════════════════
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+let W, H, GROUND;
+let gameRunning = false;
+let animId;
+let score, speed, frameCount;
+let jumpCount;
+let charImg = null;
+
+// Player
+const player = { x:0, y:0, w:64, h:96, vy:0, grounded:false };
+
+// Physics (casual/easy)
+const GRAVITY = 0.55;
+const JUMP_FORCE = -13;
+const BASE_SPEED = 4;
+const SPEED_INC = 0.0008;
+
+// Obstacles
+let obstacles = [];
+let obstacleTimer = 0;
+let nextObstacleIn = 90;
+
+// Parallax layers
+let bgLayers;
+
+function resizeCanvas() {
+  W = Math.min(window.innerWidth - 40, 900);
+  H = Math.min(window.innerHeight - 120, 480);
+  canvas.width = W;
+  canvas.height = H;
+  GROUND = H - 80;
+  player.x = 80;
+  if (!gameRunning) player.y = GROUND - player.h;
+}
+
+function initBgLayers() {
+  bgLayers = [
+    { x: 0, speed: 0.3, items: generateBgItems(8, 'far') },
+    { x: 0, speed: 0.7, items: generateBgItems(6, 'mid') },
+    { x: 0, speed: 1.2, items: generateBgItems(5, 'near') },
+  ];
+}
+
+function generateBgItems(count, layer) {
+  const items = [];
+  for (let i = 0; i < count; i++) {
+    items.push({
+      x: (W / count) * i + Math.random() * (W / count),
+      type: layer,
+      h: layer === 'far' ? 60 + Math.random() * 80
+        : layer === 'mid' ? 80 + Math.random() * 60
+        : 40 + Math.random() * 40
+    });
+  }
+  return items;
+}
+
+function startGame() {
+  if (selectedChar === null) return;
+  const c = CHARACTERS[selectedChar];
+  document.getElementById('hudName').textContent = `${c.name} · ${c.charClass}`;
+  document.getElementById('hudBest').textContent = `Best: ${bestScores[selectedChar] || 0}`;
+
+  showScreen('gameScreen');
+  resizeCanvas();
+  initBgLayers();
+
+  score = 0;
+  speed = BASE_SPEED;
+  frameCount = 0;
+  obstacles = [];
+  obstacleTimer = 0;
+  nextObstacleIn = 100;
+  jumpCount = 0;
+
+  player.y = GROUND - player.h;
+  player.vy = 0;
+  player.grounded = true;
+
+  // Load sprite
+  charImg = null;
+  if (c.sprite) {
+    const img = new Image();
+    img.onload = () => { charImg = img; };
+    img.src = c.sprite;
+  }
+
+  gameRunning = true;
+  if (animId) cancelAnimationFrame(animId);
+  loop();
+}
+
+function retryGame() { startGame(); }
+function goMenu() { showScreen('selectScreen'); gameRunning = false; cancelAnimationFrame(animId); }
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ── INPUT ──
+function jump() {
+  if (!gameRunning) return;
+  if (player.grounded) {
+    player.vy = JUMP_FORCE;
+    player.grounded = false;
+    jumpCount = 1;
+  } else if (jumpCount < 2) {
+    player.vy = JUMP_FORCE * 0.85;
+    jumpCount = 2;
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); jump(); }
+});
+canvas.addEventListener('click', () => jump());
+document.addEventListener('touchstart', e => { e.preventDefault(); jump(); }, { passive: false });
+
+// ── OBSTACLE TYPES ──
+const OBS_TYPES = [
+  { w: 36, h: 56, label: '🧌', color: '#4a3020' }, // ogre
+  { w: 30, h: 40, label: '💀', color: '#2a3030' }, // skeleton
+  { w: 24, h: 64, label: '🗡️', color: '#3a2010' }, // spike
+  { w: 44, h: 44, label: '🕷️', color: '#1a2a1a' }, // spider
+  { w: 28, h: 52, label: '🐍', color: '#1a3010' }, // serpent
+];
+
+function spawnObstacle() {
+  const t = OBS_TYPES[Math.floor(Math.random() * OBS_TYPES.length)];
+  obstacles.push({
+    x: W + 20,
+    y: GROUND - t.h,
+    w: t.w,
+    h: t.h,
+    label: t.label,
+    color: t.color,
+  });
+}
+
+// ── GAME LOOP ──
+function loop() {
+  if (!gameRunning) return;
+  update();
+  draw();
+  animId = requestAnimationFrame(loop);
+}
+
+function update() {
+  frameCount++;
+  score = Math.floor(frameCount / 6);
+  speed = BASE_SPEED + frameCount * SPEED_INC;
+
+  document.getElementById('hudScore').textContent = score;
+
+  // Player physics
+  player.vy += GRAVITY;
+  player.y += player.vy;
+  if (player.y >= GROUND - player.h) {
+    player.y = GROUND - player.h;
+    player.vy = 0;
+    player.grounded = true;
+    jumpCount = 0;
+  }
+
+  // Obstacles
+  obstacleTimer++;
+  if (obstacleTimer >= nextObstacleIn) {
+    spawnObstacle();
+    obstacleTimer = 0;
+    // Casual: longer gaps, slight randomness
+    nextObstacleIn = 90 + Math.random() * 60;
+  }
+
+  for (let i = obstacles.length - 1; i >= 0; i--) {
+    obstacles[i].x -= speed;
+    if (obstacles[i].x + obstacles[i].w < 0) {
+      obstacles.splice(i, 1);
+      continue;
+    }
+    // Collision (slightly forgiving hitbox)
+    const margin = 10;
+    const px = player.x + margin, py = player.y + margin;
+    const pw = player.w - margin*2, ph = player.h - margin*2;
+    const ox = obstacles[i].x, oy = obstacles[i].y;
+    const ow = obstacles[i].w, oh = obstacles[i].h;
+    if (px < ox+ow && px+pw > ox && py < oy+oh && py+ph > oy) {
+      endGame();
+      return;
+    }
+  }
+
+  // Scroll background
+  bgLayers.forEach(layer => {
+    layer.x -= speed * layer.speed;
+  });
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Sky gradient
+  const sky = ctx.createLinearGradient(0, 0, 0, GROUND);
+  sky.addColorStop(0, '#0a0812');
+  sky.addColorStop(0.5, '#1a1020');
+  sky.addColorStop(1, '#2a1a0e');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W, H);
+
+  // Moon
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(W * 0.8, 50, 30, 0, Math.PI * 2);
+  const moonGrad = ctx.createRadialGradient(W*0.8-5, 45, 5, W*0.8, 50, 30);
+  moonGrad.addColorStop(0, '#f0e8c0');
+  moonGrad.addColorStop(1, '#c0a850');
+  ctx.fillStyle = moonGrad;
+  ctx.shadowColor = 'rgba(240,232,192,0.4)';
+  ctx.shadowBlur = 30;
+  ctx.fill();
+  ctx.restore();
+
+  // Parallax background structures
+  bgLayers.forEach((layer, li) => {
+    const alphas = [0.15, 0.25, 0.4];
+    const colors = ['#2a1a30', '#1a1228', '#2a1810'];
+    ctx.fillStyle = colors[li];
+    ctx.globalAlpha = alphas[li];
+
+    layer.items.forEach(item => {
+      let drawX = ((item.x + layer.x) % (W + 200)) - 100;
+      if (drawX < -100) drawX += W + 200;
+
+      // Draw castle/ruin silhouettes
+      const bh = item.h;
+      const bw = 40 + li * 10;
+      ctx.fillRect(drawX, GROUND - bh, bw, bh);
+      // Battlements
+      for (let t = 0; t < 3; t++) {
+        ctx.fillRect(drawX + t * (bw/3), GROUND - bh - 14, bw/3 - 4, 14);
+      }
+      // Windows
+      ctx.fillStyle = li === 0 ? 'rgba(201,168,76,0.3)' : 'rgba(0,0,0,0.6)';
+      ctx.fillRect(drawX + bw*0.3, GROUND - bh + 20, 8, 12);
+      ctx.fillStyle = colors[li];
+    });
+    ctx.globalAlpha = 1;
+  });
+
+  // Stars
+  ctx.globalAlpha = 0.6;
+  for (let i = 0; i < 60; i++) {
+    const sx = (i * 137.5 + frameCount * 0.05) % W;
+    const sy = (i * 47.3) % (GROUND * 0.6);
+    const ss = 0.5 + (i % 3) * 0.5;
+    ctx.fillStyle = i % 5 === 0 ? '#f0d080' : '#ffffff';
+    ctx.fillRect(sx, sy, ss, ss);
+  }
+  ctx.globalAlpha = 1;
+
+  // Ground
+  const gGrad = ctx.createLinearGradient(0, GROUND, 0, H);
+  gGrad.addColorStop(0, '#3a2a14');
+  gGrad.addColorStop(0.3, '#2a1e0e');
+  gGrad.addColorStop(1, '#1a1208');
+  ctx.fillStyle = gGrad;
+  ctx.fillRect(0, GROUND, W, H - GROUND);
+
+  // Ground line / stones
+  ctx.fillStyle = '#4a3820';
+  ctx.fillRect(0, GROUND, W, 4);
+  for (let i = 0; i < W; i += 40) {
+    const ox = (i + frameCount * speed * 0.5) % W;
+    ctx.fillStyle = (Math.floor(i/40) % 2 === 0) ? '#3a2a14' : '#2e2010';
+    ctx.fillRect(ox, GROUND, 38, 4);
+  }
+
+  // Obstacles
+  obstacles.forEach(obs => {
+    // Shadow
+    ctx.save();
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.ellipse(obs.x + obs.w/2, GROUND + 4, obs.w/2, 6, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+
+    // Body
+    ctx.fillStyle = obs.color;
+    ctx.strokeStyle = '#5a3a20';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(obs.x, obs.y, obs.w, obs.h, 4);
+    ctx.fill();
+    ctx.stroke();
+
+    // Red eyes glow
+    ctx.save();
+    ctx.globalAlpha = 0.8;
+    ctx.shadowColor = '#ff2020';
+    ctx.shadowBlur = 8;
+    ctx.fillStyle = '#ff4040';
+    ctx.fillRect(obs.x + obs.w*0.2, obs.y + obs.h*0.2, 5, 5);
+    ctx.fillRect(obs.x + obs.w*0.6, obs.y + obs.h*0.2, 5, 5);
+    ctx.restore();
+
+    // Emoji label
+    ctx.font = `${Math.min(obs.w - 4, 28)}px serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(obs.label, obs.x + obs.w/2, obs.y + obs.h/2);
+  });
+
+  // Player shadow
+  ctx.save();
+  ctx.globalAlpha = 0.25;
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.ellipse(player.x + player.w/2, GROUND + 4, player.w/2, 6, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+
+  // Player
+  if (charImg) {
+    // Slight bob animation
+    const bob = player.grounded ? Math.sin(frameCount * 0.15) * 2 : 0;
+    ctx.save();
+    ctx.shadowColor = 'rgba(201,168,76,0.5)';
+    ctx.shadowBlur = 16;
+    ctx.drawImage(charImg, player.x, player.y + bob, player.w, player.h);
+    ctx.restore();
+  } else {
+    // Emoji fallback
+    const c = CHARACTERS[selectedChar];
+    ctx.save();
+    ctx.shadowColor = 'rgba(201,168,76,0.5)';
+    ctx.shadowBlur = 20;
+    const bob = player.grounded ? Math.sin(frameCount * 0.15) * 2 : 0;
+    ctx.font = `${player.h * 0.85}px serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(c.emoji, player.x + player.w/2, player.y + player.h + bob);
+    ctx.restore();
+  }
+
+  // Jump indicator (double jump sparkle)
+  if (!player.grounded && jumpCount === 2) {
+    ctx.save();
+    ctx.globalAlpha = 0.6;
+    ctx.shadowColor = '#f0d080';
+    ctx.shadowBlur = 10;
+    ctx.fillStyle = '#f0d080';
+    for (let i = 0; i < 4; i++) {
+      const angle = (frameCount * 0.2 + i * Math.PI/2);
+      const sx = player.x + player.w/2 + Math.cos(angle) * 20;
+      const sy = player.y + player.h * 0.7 + Math.sin(angle) * 10;
+      ctx.fillRect(sx - 2, sy - 2, 4, 4);
+    }
+    ctx.restore();
+  }
+}
+
+function endGame() {
+  gameRunning = false;
+  cancelAnimationFrame(animId);
+
+  const best = bestScores[selectedChar] || 0;
+  const isNew = score > best;
+  if (isNew) bestScores[selectedChar] = score;
+
+  document.getElementById('overScore').textContent = score;
+  document.getElementById('overBest').innerHTML = `Personal Best: <strong>${isNew ? score : best}</strong>`;
+  document.getElementById('newRecord').classList.toggle('show', isNew);
+  document.getElementById('overFlavor').textContent = DEATH_FLAVORS[Math.floor(Math.random() * DEATH_FLAVORS.length)];
+
+  // Fun rune based on score
+  const rune = score < 20 ? '💀' : score < 60 ? '⚔️' : score < 120 ? '🛡️' : '👑';
+  document.getElementById('overRune').textContent = rune;
+
+  showScreen('overScreen');
+}
+
+window.addEventListener('resize', () => { if (gameRunning) resizeCanvas(); });
+</script>
+</body>
+</html>

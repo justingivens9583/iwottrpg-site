@@ -48,6 +48,7 @@
     content: '';
     position: absolute;
     inset: 0;
+    pointer-events: none;
     background-image:
       repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(201,168,76,0.03) 60px, rgba(201,168,76,0.03) 61px),
       repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(201,168,76,0.03) 60px, rgba(201,168,76,0.03) 61px);
@@ -494,11 +495,9 @@ const CHARACTERS = [
   {
     name: "Baradren",
     charClass: "Ranger",
-    // Replace these paths with your actual image paths relative to your HTML file
-    // e.g. "assets/portraits/aelindra_portrait.png"
-    portrait: "images/baradren.jpeg", // portrait image path
-    sprite:   "images/baradren_full_art.png", // full-body art path
-    emoji: "🏹"   // fallback if no image
+    portrait: "images/baradren.jpeg",
+    sprite:   "images/baradren_full_art.png",
+    emoji: "🏹"
   },
   {
     name: "Fuzzy",
@@ -527,7 +526,7 @@ const CHARACTERS = [
     portrait: "images/farghus.jpeg",
     sprite: "images/farghus_full_art.png",
     emoji: "🪓"
-  }, 
+  },
   {
     name: "LL",
     charClass: "Paladin",
@@ -548,7 +547,7 @@ const CHARACTERS = [
     portrait: "images/obadiah.jpeg",
     sprite: "images/obadiah_full_art.png",
     emoji: "⚔️"
-  }, 
+  },
   {
     name: "Storm Elder",
     charClass: "Fighter",
@@ -577,14 +576,6 @@ const CHARACTERS = [
     sprite: "images/younger_full_art.png",
     emoji: "🪓"
   },
-  // Add more characters by copying the block above!
-  // {
-  //   name: "YourCharacter",
-  //   charClass: "Class",
-  //   portrait: "path/to/portrait.png",
-  //   sprite: "path/to/fullbody.png",
-  //   emoji: "⚡" 🔮 ✝️ 🪓 🗡️ 🛡️ 🔫 ⚔️ 🐙
-  // },
 ];
 
 const DEATH_FLAVORS = [
@@ -608,7 +599,7 @@ function buildCharGrid() {
   CHARACTERS.forEach((c, i) => {
     const card = document.createElement('div');
     card.className = 'char-card';
-    card.onclick = () => selectChar(i);
+    card.setAttribute('data-index', i);
     card.innerHTML = `
       <div class="card-inner">
         <div class="portrait-area">
@@ -626,6 +617,13 @@ function buildCharGrid() {
     `;
     grid.appendChild(card);
   });
+
+  grid.addEventListener('click', function(e) {
+    const card = e.target.closest('.char-card');
+    if (!card) return;
+    const idx = parseInt(card.getAttribute('data-index'));
+    selectChar(idx);
+  });
 }
 
 function selectChar(idx) {
@@ -633,7 +631,10 @@ function selectChar(idx) {
   document.querySelectorAll('.char-card').forEach((c, i) => {
     c.classList.toggle('selected', i === idx);
   });
-  document.getElementById('startBtn').classList.add('ready');
+  const btn = document.getElementById('startBtn');
+  btn.classList.add('ready');
+  btn.style.opacity = '1';
+  btn.style.pointerEvents = 'all';
 }
 
 buildCharGrid();

@@ -342,7 +342,7 @@
     transition: box-shadow 0.15s;
   }
   .placed-token:hover { box-shadow: 0 0 16px rgba(201,168,76,0.7), 0 2px 8px rgba(0,0,0,0.6); }
-  .placed-token img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+  .placed-token img { width: 100%; height: 100%; object-fit: cover; object-position: top center; pointer-events: none; user-drag: none; -webkit-user-drag: none; }
 
   .token-label {
     position: absolute;
@@ -1014,6 +1014,7 @@ function makeDraggable(el, dataObj) {
   function onDown(e) {
     if (e.target.classList.contains('token-remove') || e.target.classList.contains('note-remove')) return;
     e.stopPropagation();
+    e.preventDefault();
     dragging = true;
     const src = e.touches ? e.touches[0] : e;
     startX = src.clientX;
@@ -1041,6 +1042,10 @@ function makeDraggable(el, dataObj) {
     dragging = false;
     el.style.zIndex = 10;
   }
+
+  // Prevent browser native drag on the element and its images
+  el.addEventListener('dragstart', e => e.preventDefault());
+  el.querySelectorAll('img').forEach(img => img.addEventListener('dragstart', e => e.preventDefault()));
 
   el.addEventListener('mousedown', onDown);
   document.addEventListener('mousemove', onMove);

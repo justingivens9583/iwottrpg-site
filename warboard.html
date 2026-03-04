@@ -552,6 +552,7 @@
         <button class="tool-btn" id="tool-arrow" onclick="setTool('arrow')">➡️<span>Arrow</span></button>
         <button class="tool-btn" id="tool-erase" onclick="setTool('erase')">🧹<span>Erase</span></button>
         <button class="tool-btn" id="tool-pan" onclick="setTool('pan')">🖐️<span>Pan</span></button>
+        <a href="index.html">Home</a>
       </div>
     </div>
 
@@ -705,20 +706,28 @@ function resizeCanvas() {
 
 // Convert screen coords to world coords
 function screenToWorld(sx, sy) {
-  return { x: (sx - panX) / scale, y: (sy - panY) / scale };
+  return {
+    x: (sx - panX) / scale,
+    y: (sy - panY) / scale
+  };
 }
 
 // Convert world coords to screen coords
 function worldToScreen(wx, wy) {
-  return { x: wx * scale + panX, y: wy * scale + panY };
+  return {
+    x: wx * scale + panX,
+    y: wy * scale + panY
+  };
 }
 
 function clampPan() {
-  // Allow some over-panning so map edge is reachable
-  const minPanX = CW - CW * scale;
-  const minPanY = CH - CH * scale;
-  panX = Math.min(CW * 0.3, Math.max(minPanX - CW * 0.3, panX));
-  panY = Math.min(CH * 0.3, Math.max(minPanY - CH * 0.3, panY));
+  // Allow panning so the full map is reachable but not lost off screen
+  const maxPanX = CW * 0.3;
+  const minPanX = CW - CW * scale - CW * 0.3;
+  const maxPanY = CH * 0.3;
+  const minPanY = CH - CH * scale - CH * 0.3;
+  panX = Math.min(maxPanX, Math.max(minPanX, panX));
+  panY = Math.min(maxPanY, Math.max(minPanY, panY));
 }
 
 function zoomBy(delta, cx, cy) {
@@ -964,7 +973,12 @@ function continueDraw(e) {
     ctx.restore();
   } else if (currentTool === 'arrow' && isDrawing) {
     redraw();
+    // Apply world transform then draw preview inside it
+    ctx.save();
+    ctx.translate(panX, panY);
+    ctx.scale(scale, scale);
     drawArrowPreview(drawStart, wp);
+    ctx.restore();
   } else if (currentTool === 'erase') {
     if (isDrawing) eraseAt(wp);
     redraw();
@@ -1027,23 +1041,23 @@ function drawEraserCursor(sp) {
 function redraw() {
   ctx.clearRect(0, 0, CW, CH);
 
-  // Map background (fills screen, then zoom/pan applied inside)
   ctx.save();
   ctx.translate(panX, panY);
   ctx.scale(scale, scale);
 
+  // Map fills the logical world (0,0 to CW,CH) — zoom/pan handles the rest
   if (mapImg && mapImg.complete && mapImg.naturalWidth) {
-    ctx.drawImage(mapImg, 0, 0, CW / scale, CH / scale);
+    ctx.drawImage(mapImg, 0, 0, CW, CH);
   } else {
     ctx.fillStyle = '#1a1208';
-    ctx.fillRect(0, 0, CW / scale, CH / scale);
+    ctx.fillRect(0, 0, CW, CH);
     ctx.fillStyle = '#3a2a14';
-    ctx.font = `${16 / scale}px Cinzel, serif`;
+    ctx.font = '16px Cinzel, serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Map loading...', CW / scale / 2, CH / scale / 2);
+    ctx.fillText('Map loading...', CW / 2, CH / 2);
   }
 
-  // Drawings (world space, inside transform)
+  // Drawings — stroke width stays visually consistent regardless of zoom
   drawings.forEach(d => {
     if (d.points.length < 2) return;
     ctx.save();
@@ -1058,10 +1072,10 @@ function redraw() {
     ctx.restore();
   });
 
-  // Arrows (world space, inside transform)
+  // Arrows
   arrows.forEach(a => drawArrowFull(a));
 
-  ctx.restore(); // end world transform
+  ctx.restore();
 }
 
 function drawArrowFull(a) {
@@ -1093,10 +1107,8 @@ function drawArrowFull(a) {
 }
 
 function drawArrowPreview(fromW, toW) {
-  // Called inside world transform via redraw, so draw in world space
+  // Already inside the world transform from redraw — draw directly in world coords
   ctx.save();
-  ctx.translate(panX, panY);
-  ctx.scale(scale, scale);
   ctx.strokeStyle = currentColor;
   ctx.fillStyle = currentColor;
   ctx.lineWidth = brushSize / scale;

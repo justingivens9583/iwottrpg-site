@@ -535,7 +535,7 @@
     <button class="hdr-btn save-btn" onclick="saveBoard()">💾 Save</button>
     <button class="hdr-btn" onclick="loadBoard()">↺ Refresh</button>
     <button class="hdr-btn danger" onclick="openClearModal()">🗑 Clear All</button>
-    <button class="hdr-btn onclic="index.html">Home</button>
+    <button class="hdr-btn" onclick="window.location.href='index.html'">🏠 Home</button>
   </div>
 </header>
 
@@ -553,7 +553,6 @@
         <button class="tool-btn" id="tool-arrow" onclick="setTool('arrow')">➡️<span>Arrow</span></button>
         <button class="tool-btn" id="tool-erase" onclick="setTool('erase')">🧹<span>Erase</span></button>
         <button class="tool-btn" id="tool-pan" onclick="setTool('pan')">🖐️<span>Pan</span></button>
-        <a href="index.html">Home</a>
       </div>
     </div>
 
@@ -705,19 +704,19 @@ function resizeCanvas() {
   canvas.height = CH;
 }
 
-// Convert screen coords to world coords
+// Convert screen coords to normalized world coords (0–1 fraction of canvas)
 function screenToWorld(sx, sy) {
   return {
-    x: (sx - panX) / scale,
-    y: (sy - panY) / scale
+    x: (sx - panX) / (CW * scale),
+    y: (sy - panY) / (CH * scale)
   };
 }
 
-// Convert world coords to screen coords
-function worldToScreen(wx, wy) {
+// Convert normalized world coords to screen coords
+function worldToScreen(nx, ny) {
   return {
-    x: wx * scale + panX,
-    y: wy * scale + panY
+    x: nx * CW * scale + panX,
+    y: ny * CH * scale + panY
   };
 }
 
@@ -761,7 +760,7 @@ function updateDOMPositions() {
   tokens.forEach(t => {
     const el = document.getElementById('token-' + t.id);
     if (!el) return;
-    const s = worldToScreen(t.wx, t.wy);
+    const s = worldToScreen(t.nx, t.ny);
     el.style.left = s.x + 'px';
     el.style.top = s.y + 'px';
     el.style.width = Math.round(56 * scale) + 'px';
@@ -770,7 +769,7 @@ function updateDOMPositions() {
   notes.forEach(n => {
     const el = document.getElementById('note-' + n.id);
     if (!el) return;
-    const s = worldToScreen(n.wx, n.wy);
+    const s = worldToScreen(n.nx, n.ny);
     el.style.left = s.x + 'px';
     el.style.top = s.y + 'px';
   });
@@ -959,7 +958,6 @@ function continueDraw(e) {
   if (currentTool === 'draw' && isDrawing) {
     livePoints.push(wp);
     redraw();
-    // Live preview in world space via transform
     ctx.save();
     ctx.translate(panX, panY);
     ctx.scale(scale, scale);
@@ -969,7 +967,10 @@ function continueDraw(e) {
     ctx.lineJoin = 'round';
     ctx.globalAlpha = 0.9;
     ctx.beginPath();
-    livePoints.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+    livePoints.forEach((p, i) => {
+      const px = p.x * CW, py = p.y * CH;
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    });
     ctx.stroke();
     ctx.restore();
   } else if (currentTool === 'arrow' && isDrawing) {
@@ -1015,7 +1016,7 @@ function endDraw(e) {
 }
 
 function eraseAt(wp) {
-  const r = (brushSize * 6) / scale;
+  const r = (brushSize * 6) / (CW * scale); // normalized radius
   drawings = drawings.filter(d => !d.points.some(p => Math.hypot(p.x - wp.x, p.y - wp.y) < r));
   arrows = arrows.filter(a => {
     const mx = (a.x1 + a.x2) / 2, my = (a.y1 + a.y2) / 2;
@@ -1058,7 +1059,7 @@ function redraw() {
     ctx.fillText('Map loading...', CW / 2, CH / 2);
   }
 
-  // Drawings — stroke width stays visually consistent regardless of zoom
+  // Drawings — points stored as normalized (0-1), convert to canvas pixels
   drawings.forEach(d => {
     if (d.points.length < 2) return;
     ctx.save();
@@ -1068,7 +1069,10 @@ function redraw() {
     ctx.lineJoin = 'round';
     ctx.globalAlpha = 0.85;
     ctx.beginPath();
-    d.points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+    d.points.forEach((p, i) => {
+      const px = p.x * CW, py = p.y * CH;
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    });
     ctx.stroke();
     ctx.restore();
   });
@@ -1080,7 +1084,6 @@ function redraw() {
 }
 
 function drawArrowFull(a) {
-  // Called inside the world-space transform
   ctx.save();
   ctx.strokeStyle = a.color;
   ctx.fillStyle = a.color;
@@ -1088,27 +1091,30 @@ function drawArrowFull(a) {
   ctx.lineCap = 'round';
   ctx.globalAlpha = 0.9;
 
-  const dx = a.x2 - a.x1, dy = a.y2 - a.y1;
+  // Convert normalized to canvas pixels
+  const x1 = a.x1 * CW, y1 = a.y1 * CH;
+  const x2 = a.x2 * CW, y2 = a.y2 * CH;
+
+  const dx = x2 - x1, dy = y2 - y1;
   const angle = Math.atan2(dy, dx);
   const len = Math.hypot(dx, dy);
   const headLen = Math.min(20 / scale, len * 0.4);
 
   ctx.beginPath();
-  ctx.moveTo(a.x1, a.y1);
-  ctx.lineTo(a.x2, a.y2);
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(a.x2, a.y2);
-  ctx.lineTo(a.x2 - headLen * Math.cos(angle - 0.4), a.y2 - headLen * Math.sin(angle - 0.4));
-  ctx.lineTo(a.x2 - headLen * Math.cos(angle + 0.4), a.y2 - headLen * Math.sin(angle + 0.4));
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.4), y2 - headLen * Math.sin(angle - 0.4));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.4), y2 - headLen * Math.sin(angle + 0.4));
   ctx.closePath();
   ctx.fill();
   ctx.restore();
 }
 
-function drawArrowPreview(fromW, toW) {
-  // Already inside the world transform from redraw — draw directly in world coords
+function drawArrowPreview(fromN, toN) {
   ctx.save();
   ctx.strokeStyle = currentColor;
   ctx.fillStyle = currentColor;
@@ -1117,21 +1123,23 @@ function drawArrowPreview(fromW, toW) {
   ctx.globalAlpha = 0.6;
   ctx.setLineDash([6 / scale, 4 / scale]);
 
-  const dx = toW.x - fromW.x, dy = toW.y - fromW.y;
+  const x1 = fromN.x * CW, y1 = fromN.y * CH;
+  const x2 = toN.x * CW, y2 = toN.y * CH;
+  const dx = x2 - x1, dy = y2 - y1;
   const angle = Math.atan2(dy, dx);
   const len = Math.hypot(dx, dy);
   const headLen = Math.min(20 / scale, len * 0.4);
 
   ctx.beginPath();
-  ctx.moveTo(fromW.x, fromW.y);
-  ctx.lineTo(toW.x, toW.y);
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
   ctx.stroke();
 
   ctx.setLineDash([]);
   ctx.beginPath();
-  ctx.moveTo(toW.x, toW.y);
-  ctx.lineTo(toW.x - headLen * Math.cos(angle - 0.4), toW.y - headLen * Math.sin(angle - 0.4));
-  ctx.lineTo(toW.x - headLen * Math.cos(angle + 0.4), toW.y - headLen * Math.sin(angle + 0.4));
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - headLen * Math.cos(angle - 0.4), y2 - headLen * Math.sin(angle - 0.4));
+  ctx.lineTo(x2 - headLen * Math.cos(angle + 0.4), y2 - headLen * Math.sin(angle + 0.4));
   ctx.closePath();
   ctx.fill();
   ctx.restore();
@@ -1162,9 +1170,8 @@ function buildTokenList() {
 
 function placeToken(charIndex) {
   const id = Date.now() + Math.random();
-  // Place at center of current view in world coords
-  const wp = screenToWorld(CW / 2, CH / 2);
-  const token = { id, charIndex, wx: wp.x - 28, wy: wp.y - 36 };
+  const n = screenToWorld(CW / 2, CH / 2);
+  const token = { id, charIndex, nx: n.x, ny: n.y };
   tokens.push(token);
   createTokenDOM(token);
 }
@@ -1174,7 +1181,7 @@ function createTokenDOM(token) {
   const el = document.createElement('div');
   el.className = 'placed-token';
   el.id = 'token-' + token.id;
-  const sp = worldToScreen(token.wx, token.wy);
+  const sp = worldToScreen(token.nx, token.ny);
   el.style.left = sp.x + 'px';
   el.style.top = sp.y + 'px';
   el.style.width = Math.round(56 * scale) + 'px';
@@ -1206,8 +1213,8 @@ function placeNote() {
   const text = document.getElementById('noteInput').value.trim();
   if (!text) return;
   const id = Date.now() + Math.random();
-  const wp = screenToWorld(CW / 2, CH / 2);
-  const note = { id, text, wx: wp.x - 60, wy: wp.y - 20 };
+  const n = screenToWorld(CW / 2, CH / 2);
+  const note = { id, text, nx: n.x, ny: n.y };
   notes.push(note);
   createNoteDOM(note);
   document.getElementById('noteInput').value = '';
@@ -1217,7 +1224,7 @@ function createNoteDOM(note) {
   const el = document.createElement('div');
   el.className = 'placed-note';
   el.id = 'note-' + note.id;
-  const sp = worldToScreen(note.wx, note.wy);
+  const sp = worldToScreen(note.nx, note.ny);
   el.style.left = sp.x + 'px';
   el.style.top = sp.y + 'px';
   el.innerHTML = `
@@ -1267,10 +1274,9 @@ function makeDraggable(el, dataObj) {
     const newTop = startTop + dy;
     el.style.left = newLeft + 'px';
     el.style.top = newTop + 'px';
-    // Convert screen position back to world coords
-    const wp = screenToWorld(newLeft, newTop);
-    dataObj.wx = wp.x;
-    dataObj.wy = wp.y;
+    const n = screenToWorld(newLeft, newTop);
+    dataObj.nx = n.x;
+    dataObj.ny = n.y;
   }
 
   function onUp() {

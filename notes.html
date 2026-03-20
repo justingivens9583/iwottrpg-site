@@ -45,12 +45,12 @@
       <div class="page-divider"></div>
     </div>
 
-    <button class="open-doc-btn" onclick="openDoc()">↗ Open Full Document</button>
+    <button class="open-doc-btn" onclick="window.open('https://docs.google.com/document/d/1QX5QCXgr3yEjrQBdAgTDxRQUw--1GbtzlQLD_3XkQcU/edit', '_blank')">↗ Open Full Document</button>
 
     <div class="notes-frame-box">
       <iframe
         id="notesFrame"
-        src=""
+        src="https://docs.google.com/document/d/1QX5QCXgr3yEjrQBdAgTDxRQUw--1GbtzlQLD_3XkQcU/preview"
         width="100%"
         height="900"
         frameborder="0">
@@ -59,23 +59,7 @@
 
   </div>
 
-  <script>
-    function switchDoc(name, btn) {
-      const id = docs[name];
-      document.getElementById("notesFrame").src =
-        `https://docs.google.com/document/d/${id}/preview`;
-      document.querySelectorAll('.notes-tabs button').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-    }
-
-    function openDoc() {
-      const frame = document.getElementById("notesFrame");
-      const url = frame.src.replace("/preview", "/edit");
-      window.open(url, "_blank");
-    }
-
-    switchDoc("summary");
-  </script>
+  <script></script>
 
 </body>
 </html>

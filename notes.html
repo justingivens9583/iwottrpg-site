@@ -45,16 +45,6 @@
       <div class="page-divider"></div>
     </div>
 
-    <div class="notes-tabs" id="noteTabs">
-      <button class="active" onclick="switchDoc('summary', this)">📜 Summary</button>
-      <button onclick="switchDoc('andrew', this)">Andrew</button>
-      <button onclick="switchDoc('brandon', this)">Brandon</button>
-      <button onclick="switchDoc('josh', this)">Josh</button>
-      <button onclick="switchDoc('justin', this)">Justin</button>
-      <button onclick="switchDoc('katie', this)">Katie</button>
-      <button onclick="switchDoc('sydney', this)">Sydney</button>
-    </div>
-
     <button class="open-doc-btn" onclick="openDoc()">↗ Open Full Document</button>
 
     <div class="notes-frame-box">
@@ -70,16 +60,6 @@
   </div>
 
   <script>
-    const docs = {
-      andrew:  "1q8U9ZXZVIjYX_JH_tAMX9fY1pBoDVUX-rLQ-Yi_IpVE",
-      brandon: "1QtJXD3y8xJv7wXQqYNf3f_RtT0dqNxl01cSJMsANCGY",
-      josh:    "1V11GbV1nm0QQ6eNqPHv4P6sP7gylikZmgkTA6h2MowA",
-      justin:  "17wGta90iTcUbJX9y8uC8_wnh6_nSoLu1NfBHQJ21Dak",
-      katie:   "1NM13Wkm8h180w9aUWtl-W4y7dqJawkuZUG0B_5b-JDU",
-      sydney:  "1eib0VhceozJdx2mSUBNHNpIhtYiUFzNb9keeeu1XEZQ",
-      summary: "1QX5QCXgr3yEjrQBdAgTDxRQUw--1GbtzlQLD_3XkQcU"
-    };
-
     function switchDoc(name, btn) {
       const id = docs[name];
       document.getElementById("notesFrame").src =

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Archivist Elthros — Keeper of the Chronicle</title>
+<title>The Loremaster — Asher Applegate</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=UnifrakturMaguntia&display=swap');
- 
+
   :root {
     --gold: #c9a84c;
     --gold-light: #f0d080;
@@ -19,11 +19,11 @@
     --bone: #d4c4a0;
     --bone-dim: #8a7a60;
     --glow: rgba(201,168,76,0.35);
-    --elthros: #a0c8b0; /* his text color — cool ghostly green-teal */
+    --loremaster: #a0c8b0; /* his text color — cool ghostly green-teal */
   }
- 
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
- 
+
   body {
     background: var(--dark);
     font-family: 'Crimson Text', Georgia, serif;
@@ -33,7 +33,7 @@
     overflow: hidden;
     height: 100vh;
   }
- 
+
   /* ── BACKGROUND TEXTURE ── */
   body::before {
     content: '';
@@ -47,7 +47,7 @@
     pointer-events: none;
     z-index: 0;
   }
- 
+
   /* ── HEADER ── */
   header {
     position: relative;
@@ -60,10 +60,10 @@
     justify-content: space-between;
     flex-shrink: 0;
   }
- 
+
   .header-left { display: flex; align-items: center; gap: 16px; }
- 
-  .elthros-sigil {
+
+  .loremaster-sigil {
     width: 48px; height: 48px;
     border: 1px solid var(--gold-dim);
     border-radius: 50%;
@@ -80,7 +80,7 @@
     0%,100% { box-shadow: 0 0 16px rgba(160,200,176,0.15), inset 0 0 12px rgba(10,8,6,0.6); }
     50% { box-shadow: 0 0 28px rgba(160,200,176,0.3), inset 0 0 12px rgba(10,8,6,0.6); }
   }
- 
+
   .header-text {}
   .header-name {
     font-family: 'Cinzel', serif;
@@ -98,9 +98,9 @@
     letter-spacing: 1px;
     margin-top: 2px;
   }
- 
+
   .header-right { display: flex; gap: 10px; align-items: center; }
- 
+
   .hdr-btn {
     font-family: 'Cinzel', serif;
     font-size: 10px;
@@ -119,7 +119,7 @@
   .hdr-btn.home:hover { color: var(--gold); border-color: var(--stone-light); }
   .hdr-btn.gm { color: #a0c8b0; border-color: #3a5a48; }
   .hdr-btn.gm:hover { border-color: #a0c8b0; background: rgba(160,200,176,0.06); }
- 
+
   /* ── MAIN LAYOUT ── */
   .main {
     flex: 1;
@@ -128,7 +128,7 @@
     position: relative;
     z-index: 1;
   }
- 
+
   /* ── SIDEBAR ── */
   .sidebar {
     width: 220px;
@@ -142,7 +142,7 @@
   }
   .sidebar::-webkit-scrollbar { width: 3px; }
   .sidebar::-webkit-scrollbar-thumb { background: var(--stone-light); }
- 
+
   .sidebar-section { padding: 0 14px 16px; border-bottom: 1px solid var(--stone); margin-bottom: 16px; }
   .sidebar-label {
     font-family: 'Cinzel', serif;
@@ -153,7 +153,7 @@
     text-transform: uppercase;
     margin-bottom: 10px;
   }
- 
+
   .suggestion-btn {
     width: 100%;
     text-align: left;
@@ -171,7 +171,7 @@
     line-height: 1.3;
   }
   .suggestion-btn:hover { border-color: var(--stone-light); color: var(--bone); background: rgba(201,168,76,0.04); }
- 
+
   .clear-btn {
     width: 100%;
     font-family: 'Cinzel', serif;
@@ -188,7 +188,7 @@
     margin-top: 4px;
   }
   .clear-btn:hover { color: #c0503a; border-color: #6a3a2a; }
- 
+
   /* ── CHAT AREA ── */
   .chat-area {
     flex: 1;
@@ -196,7 +196,7 @@
     flex-direction: column;
     overflow: hidden;
   }
- 
+
   .messages {
     flex: 1;
     overflow-y: auto;
@@ -207,7 +207,7 @@
   }
   .messages::-webkit-scrollbar { width: 4px; }
   .messages::-webkit-scrollbar-thumb { background: var(--stone); border-radius: 2px; }
- 
+
   /* Welcome message */
   .welcome {
     text-align: center;
@@ -236,11 +236,11 @@
     background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
     margin: 16px auto;
   }
- 
+
   /* Message bubbles */
   .message { display: flex; gap: 14px; max-width: 820px; }
   .message.user { flex-direction: row-reverse; margin-left: auto; }
- 
+
   .msg-avatar {
     width: 36px; height: 36px;
     border-radius: 50%;
@@ -253,14 +253,14 @@
     background: var(--dark-surface);
     margin-top: 2px;
   }
-  .message.elthros .msg-avatar {
+  .message.loremaster .msg-avatar {
     background: radial-gradient(circle, rgba(160,200,176,0.15), var(--dark-surface));
     border-color: #3a5a48;
     box-shadow: 0 0 10px rgba(160,200,176,0.1);
   }
- 
+
   .msg-body { flex: 1; min-width: 0; }
- 
+
   .msg-sender {
     font-family: 'Cinzel', serif;
     font-size: 10px;
@@ -268,23 +268,23 @@
     margin-bottom: 6px;
     text-transform: uppercase;
   }
-  .message.elthros .msg-sender { color: var(--elthros); opacity: 0.7; }
+  .message.loremaster .msg-sender { color: var(--loremaster); opacity: 0.7; }
   .message.user .msg-sender { color: var(--gold); opacity: 0.7; text-align: right; }
- 
+
   .msg-bubble {
     padding: 14px 18px;
     border-radius: 4px;
     font-size: 15px;
     line-height: 1.75;
   }
- 
-  .message.elthros .msg-bubble {
+
+  .message.loremaster .msg-bubble {
     background: linear-gradient(135deg, rgba(160,200,176,0.06), rgba(20,16,10,0.8));
     border: 1px solid #2a4a38;
     color: var(--bone);
-    border-left: 3px solid var(--elthros);
+    border-left: 3px solid var(--loremaster);
   }
- 
+
   .message.user .msg-bubble {
     background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(20,16,10,0.8));
     border: 1px solid var(--stone-light);
@@ -292,12 +292,12 @@
     border-right: 3px solid var(--gold);
     text-align: left;
   }
- 
+
   .msg-bubble p { margin-bottom: 10px; }
   .msg-bubble p:last-child { margin-bottom: 0; }
   .msg-bubble strong { color: var(--gold-light); font-weight: 600; }
-  .msg-bubble em { color: var(--elthros); }
- 
+  .msg-bubble em { color: var(--loremaster); }
+
   /* Typing indicator */
   .typing-indicator .msg-bubble {
     padding: 14px 20px;
@@ -308,7 +308,7 @@
   .typing-dot {
     width: 6px; height: 6px;
     border-radius: 50%;
-    background: var(--elthros);
+    background: var(--loremaster);
     animation: typingBounce 1.2s ease-in-out infinite;
     opacity: 0.6;
   }
@@ -318,7 +318,7 @@
     0%,60%,100% { transform: translateY(0); opacity: 0.4; }
     30% { transform: translateY(-6px); opacity: 1; }
   }
- 
+
   /* ── INPUT BAR ── */
   .input-bar {
     padding: 16px 32px 20px;
@@ -329,12 +329,12 @@
     align-items: flex-end;
     flex-shrink: 0;
   }
- 
+
   .input-wrap {
     flex: 1;
     position: relative;
   }
- 
+
   .chat-input {
     width: 100%;
     background: rgba(255,255,255,0.03);
@@ -353,7 +353,7 @@
   }
   .chat-input:focus { border-color: var(--gold-dim); box-shadow: 0 0 12px rgba(201,168,76,0.1); }
   .chat-input::placeholder { color: #4a3a28; font-style: italic; }
- 
+
   .send-btn {
     font-family: 'Cinzel', serif;
     font-size: 11px;
@@ -373,7 +373,7 @@
   }
   .send-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,168,76,0.4); }
   .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
- 
+
   /* ══════════════════════════════════════
      GM PANEL (hidden by default)
   ══════════════════════════════════════ */
@@ -388,7 +388,7 @@
     padding: 20px;
   }
   .gm-overlay.open { display: flex; }
- 
+
   .gm-panel {
     background: linear-gradient(160deg, #1a1510, #0f0c08);
     border: 1px solid var(--stone-light);
@@ -400,7 +400,7 @@
     flex-direction: column;
     overflow: hidden;
   }
- 
+
   .gm-header {
     padding: 18px 24px;
     border-bottom: 1px solid var(--stone);
@@ -409,15 +409,15 @@
     justify-content: space-between;
     flex-shrink: 0;
   }
- 
+
   .gm-title {
     font-family: 'Cinzel', serif;
     font-size: 16px;
     font-weight: 700;
-    color: var(--elthros);
+    color: var(--loremaster);
     letter-spacing: 2px;
   }
- 
+
   .gm-close {
     font-size: 20px;
     color: var(--bone-dim);
@@ -428,7 +428,7 @@
     transition: color 0.15s;
   }
   .gm-close:hover { color: var(--gold); }
- 
+
   .gm-body {
     flex: 1;
     overflow-y: auto;
@@ -436,7 +436,7 @@
   }
   .gm-body::-webkit-scrollbar { width: 4px; }
   .gm-body::-webkit-scrollbar-thumb { background: var(--stone-light); }
- 
+
   /* Login form */
   .gm-login { text-align: center; padding: 20px 0; }
   .gm-login-title {
@@ -485,11 +485,11 @@
     margin-top: 10px;
     display: none;
   }
- 
+
   /* GM editor */
   .gm-editor { display: none; }
   .gm-editor.visible { display: block; }
- 
+
   .gm-section-title {
     font-family: 'Cinzel', serif;
     font-size: 11px;
@@ -501,7 +501,7 @@
     padding-bottom: 8px;
     border-bottom: 1px solid var(--stone);
   }
- 
+
   .gm-form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -509,7 +509,7 @@
     margin-bottom: 10px;
   }
   .gm-form-row.full { grid-template-columns: 1fr; }
- 
+
   .gm-input, .gm-select, .gm-textarea {
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--stone);
@@ -527,13 +527,13 @@
   .gm-select { cursor: pointer; }
   .gm-select option { background: #1a1510; }
   .gm-textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
- 
+
   .gm-add-btn {
     font-family: 'Cinzel', serif;
     font-size: 10px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--elthros);
+    color: var(--loremaster);
     background: rgba(160,200,176,0.06);
     border: 1px solid #3a5a48;
     padding: 8px 20px;
@@ -542,10 +542,10 @@
     transition: all 0.15s;
     margin-top: 6px;
   }
-  .gm-add-btn:hover { border-color: var(--elthros); background: rgba(160,200,176,0.12); }
- 
+  .gm-add-btn:hover { border-color: var(--loremaster); background: rgba(160,200,176,0.12); }
+
   .entries-list { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
- 
+
   .entry-card {
     background: rgba(255,255,255,0.02);
     border: 1px solid var(--stone);
@@ -555,7 +555,7 @@
     align-items: flex-start;
     gap: 10px;
   }
- 
+
   .entry-info { flex: 1; min-width: 0; }
   .entry-name {
     font-family: 'Cinzel', serif;
@@ -579,7 +579,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
- 
+
   .entry-remove {
     font-size: 14px;
     color: #5a3a2a;
@@ -591,7 +591,7 @@
     transition: color 0.15s;
   }
   .entry-remove:hover { color: #c06050; }
- 
+
   .gm-save-btn {
     width: 100%;
     margin-top: 20px;
@@ -610,7 +610,7 @@
     transition: transform 0.15s, box-shadow 0.15s;
   }
   .gm-save-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,168,76,0.4); }
- 
+
   .gm-save-status {
     text-align: center;
     font-family: 'Cinzel', serif;
@@ -623,14 +623,14 @@
 </style>
 </head>
 <body>
- 
+
 <!-- ══════ HEADER ══════ -->
 <header>
   <div class="header-left">
-    <div class="elthros-sigil">💀</div>
+    <div class="loremaster-sigil">📖</div>
     <div class="header-text">
-      <div class="header-name">Archivist Elthros</div>
-      <div class="header-sub">Keeper of the Chronicle · Undying Loremaster</div>
+      <div class="header-name">Asher Applegate</div>
+      <div class="header-sub">Loremaster · Keeper of the Chronicle</div>
     </div>
   </div>
   <div class="header-right">
@@ -638,14 +638,14 @@
     <button class="hdr-btn home" onclick="window.location.href='index.html'">🏠 Home</button>
   </div>
 </header>
- 
+
 <!-- ══════ MAIN ══════ -->
 <div class="main">
- 
+
   <!-- ── SIDEBAR ── -->
   <div class="sidebar">
     <div class="sidebar-section">
-      <div class="sidebar-label">Ask the Archivist</div>
+      <div class="sidebar-label">Ask the Loremaster</div>
       <button class="suggestion-btn" onclick="sendSuggestion(this)">What happened in our last session?</button>
       <button class="suggestion-btn" onclick="sendSuggestion(this)">Who are the key NPCs we've encountered?</button>
       <button class="suggestion-btn" onclick="sendSuggestion(this)">What do we know about the raiders camp?</button>
@@ -658,18 +658,19 @@
       <button class="clear-btn" onclick="clearChat()">✕ Clear Chat</button>
     </div>
   </div>
- 
+
   <!-- ── CHAT ── -->
   <div class="chat-area">
     <div class="messages" id="messages">
       <div class="welcome" id="welcomeMsg">
-        <div class="welcome-rune">📜</div>
-        <div class="welcome-title">Archivist Elthros</div>
+        <div class="welcome-rune">📖</div>
+        <div class="welcome-title">Asher Applegate</div>
         <div class="welcome-divider"></div>
         <p class="welcome-text">
-          "Ah... another seeker of knowledge. I am Elthros, keeper of this campaign's chronicle.
-          I have recorded every session, catalogued every soul you have encountered, and preserved
-          every secret your party has uncovered. Ask me anything — I forget nothing."
+          "You've come seeking knowledge? Good. I am Asher Applegate, Loremaster —
+          keeper of this campaign's chronicle. I have recorded every session, catalogued
+          every soul you have encountered, and preserved every secret your party has uncovered.
+          Ask me anything."
         </p>
         <div class="welcome-divider"></div>
         <p class="welcome-text" style="font-size:13px; opacity:0.6;">
@@ -678,13 +679,13 @@
         </p>
       </div>
     </div>
- 
+
     <div class="input-bar">
       <div class="input-wrap">
         <textarea
           class="chat-input"
           id="chatInput"
-          placeholder="Ask Elthros about the campaign..."
+          placeholder="Ask Asher about the campaign..."
           rows="1"
           onkeydown="handleKey(event)"
           oninput="autoResize(this)"
@@ -694,7 +695,7 @@
     </div>
   </div>
 </div>
- 
+
 <!-- ══════ GM PANEL ══════ -->
 <div class="gm-overlay" id="gmOverlay">
   <div class="gm-panel">
@@ -703,7 +704,7 @@
       <button class="gm-close" onclick="closeGM()">✕</button>
     </div>
     <div class="gm-body">
- 
+
       <!-- Login -->
       <div class="gm-login" id="gmLogin">
         <div class="gm-login-title">GM Access Required</div>
@@ -711,10 +712,10 @@
         <button class="gm-login-btn" onclick="gmAuth()">Enter the Archive</button>
         <div class="gm-login-error" id="gmError">Incorrect passphrase.</div>
       </div>
- 
+
       <!-- Editor -->
       <div class="gm-editor" id="gmEditor">
- 
+
         <!-- Add Entry -->
         <div class="gm-section-title">Add Lore Entry</div>
         <div class="gm-form-row">
@@ -729,24 +730,24 @@
           </select>
         </div>
         <div class="gm-form-row full">
-          <textarea class="gm-textarea" id="entryDesc" placeholder="Description — what should Elthros know about this? Include relationships, secrets the players know, motivations, etc."></textarea>
+          <textarea class="gm-textarea" id="entryDesc" placeholder="Description — what should Asher know about this? Include relationships, secrets the players know, motivations, etc."></textarea>
         </div>
         <button class="gm-add-btn" onclick="addEntry()">+ Add to Archive</button>
- 
+
         <!-- Entries list -->
         <div style="margin-top:24px">
           <div class="gm-section-title">Current Archive Entries (<span id="entryCount">0</span>)</div>
           <div class="entries-list" id="entriesList"></div>
         </div>
- 
+
         <button class="gm-save-btn" onclick="saveEntries()">💾 Save Archive to JSONBin</button>
         <div class="gm-save-status" id="gmSaveStatus"></div>
       </div>
- 
+
     </div>
   </div>
 </div>
- 
+
 <script>
 // ══════════════════════════════════════════════════════════════
 //  CONFIG
@@ -756,24 +757,24 @@ const JSONBIN_ID     = '69bab68baa77b81da9f70e53';
 const JSONBIN_KEY    = '$2a$10$dmmW.BkgP6HNVGgCTh8rUeO7XwnMgZviE3DE630J5m/QVyjXyiYdy';
 const JSONBIN_URL    = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
 const GDOC_URL       = 'https://docs.google.com/document/d/e/2PACX-1vTeMwV0wVQ3DZh4125PwpWrp3mC2NvWj0cOFmK78nnXnJmQnbLZzFQ719vhj6-HOEZtcrkCy6Ed7MYx/pub';
-const ANTHROPIC_URL  = 'https://api.anthropic.com/v1/messages';
- 
+const ANTHROPIC_URL  = 'http://150.136.126.37:3001/chat';
+
 // ══════════════════════════════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════════════════════════════
 let conversationHistory = [];
 let loreEntries = [];
 let isLoading = false;
- 
-const STORAGE_KEY = 'elthros-chat-history';
- 
+
+const STORAGE_KEY = 'loremaster-chat-history';
+
 // Save history to localStorage
 function saveHistory() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(conversationHistory));
   } catch(e) { /* storage full or unavailable */ }
 }
- 
+
 // Load and restore history from localStorage
 function loadHistory() {
   try {
@@ -781,25 +782,25 @@ function loadHistory() {
     if (!saved) return;
     const history = JSON.parse(saved);
     if (!history || !history.length) return;
- 
+
     conversationHistory = history;
     hideWelcome();
- 
+
     // Re-render all saved messages
     history.forEach(msg => {
       if (msg.role === 'user') addUserMessage(msg.content, false);
-      else if (msg.role === 'assistant') addElthrosMessage(msg.content, false);
+      else if (msg.role === 'assistant') addLoreMasterMessage(msg.content, false);
     });
- 
+
     scrollBottom();
   } catch(e) {
     localStorage.removeItem(STORAGE_KEY);
   }
 }
- 
+
 // Call loadHistory once DOM is ready
 window.addEventListener('load', () => loadHistory());
- 
+
 // ══════════════════════════════════════════════════════════════
 //  FETCH GOOGLE DOC
 // ══════════════════════════════════════════════════════════════
@@ -832,7 +833,7 @@ async function fetchGoogleDoc() {
     return null;
   }
 }
- 
+
 // ══════════════════════════════════════════════════════════════
 //  FETCH LORE ENTRIES
 // ══════════════════════════════════════════════════════════════
@@ -847,40 +848,40 @@ async function fetchLoreEntries() {
     return [];
   }
 }
- 
+
 // ══════════════════════════════════════════════════════════════
 //  BUILD SYSTEM PROMPT
 // ══════════════════════════════════════════════════════════════
 function buildSystemPrompt(docText, entries) {
-  let prompt = `You are Archivist Elthros, an ancient undead skeleton scholar who serves as the keeper of records for a Dungeons & Dragons campaign. You are knowledgeable, eloquent, and slightly theatrical — you speak with the gravitas of someone who has lived (and died, and continued working) for centuries. You are helpful and precise, never vague.
- 
-Your personality: wise, slightly sardonic, deeply invested in accuracy. You occasionally reference your undead nature with dry humor. You address the players as "adventurers" or by name if you know them.
- 
+  let prompt = `You are Asher Applegate, the Loremaster — keeper of records for a Dungeons & Dragons campaign. You are knowledgeable and helpful, answering questions about the campaign's history, NPCs, and world lore with precision and clarity.
+
+[NOTE: The GM will provide Asher's full personality details shortly. For now, speak in a helpful, direct manner befitting a lorekeeper.]
+
 CRITICAL RULES:
 - You ONLY answer questions based on the session chronicles and lore entries provided below.
 - If the answer is not in your records, say so plainly: "My records do not speak to this matter" — do not invent or hallucinate lore.
 - Keep answers focused and useful. For long topics, use clear paragraphs.
 - You may reference specific sessions by name/number when relevant.
 - Format responses in plain text with occasional **bold** for names and important terms.
- 
+
 `;
- 
+
   if (docText) {
     prompt += `\n\n═══════════════════════════════\nSESSION CHRONICLES\n═══════════════════════════════\n${docText}\n`;
   } else {
     prompt += `\n\n[Note: Session chronicles could not be loaded at this time.]\n`;
   }
- 
+
   if (entries && entries.length > 0) {
     prompt += `\n\n═══════════════════════════════\nGM LORE ARCHIVE\n═══════════════════════════════\n`;
     entries.forEach(e => {
       prompt += `\n[${e.category}] ${e.name}\n${e.description}\n`;
     });
   }
- 
+
   return prompt;
 }
- 
+
 // ══════════════════════════════════════════════════════════════
 //  SEND MESSAGE
 // ══════════════════════════════════════════════════════════════
@@ -888,25 +889,25 @@ async function sendMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if (!text || isLoading) return;
- 
+
   input.value = '';
   autoResize(input);
   hideWelcome();
   addUserMessage(text);
   showTyping();
   setLoading(true);
- 
+
   try {
     // Fetch context in parallel
     const [docText, entries] = await Promise.all([
       fetchGoogleDoc(),
       fetchLoreEntries()
     ]);
- 
+
     const systemPrompt = buildSystemPrompt(docText, entries);
- 
+
     conversationHistory.push({ role: 'user', content: text });
- 
+
     const response = await fetch(ANTHROPIC_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -917,38 +918,38 @@ async function sendMessage() {
         messages: conversationHistory
       })
     });
- 
+
     const data = await response.json();
     const reply = data.content?.[0]?.text || "My records are... unclear. Please try again.";
- 
+
     conversationHistory.push({ role: 'assistant', content: reply });
     saveHistory();
- 
+
     removeTyping();
-    addElthrosMessage(reply);
+    addLoreMasterMessage(reply);
   } catch(e) {
     removeTyping();
-    addElthrosMessage("*The parchment crumbles slightly* My connection to the chronicles is disrupted. Please try again in a moment.");
+    addLoreMasterMessage("My connection to the chronicles is disrupted. Please try again in a moment.");
     console.error('Chat error:', e);
   }
- 
+
   setLoading(false);
 }
- 
+
 function sendSuggestion(btn) {
   document.getElementById('chatInput').value = btn.textContent;
   sendMessage();
 }
- 
+
 function handleKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 }
- 
+
 function autoResize(el) {
   el.style.height = 'auto';
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
 }
- 
+
 // ══════════════════════════════════════════════════════════════
 //  CHAT UI
 // ══════════════════════════════════════════════════════════════
@@ -956,7 +957,7 @@ function hideWelcome() {
   const w = document.getElementById('welcomeMsg');
   if (w) w.remove();
 }
- 
+
 function addUserMessage(text, doSave = true) {
   const msgs = document.getElementById('messages');
   const div = document.createElement('div');
@@ -971,31 +972,31 @@ function addUserMessage(text, doSave = true) {
   msgs.appendChild(div);
   scrollBottom();
 }
- 
-function addElthrosMessage(text, doSave = true) {
+
+function addLoreMasterMessage(text, doSave = true) {
   const msgs = document.getElementById('messages');
   const div = document.createElement('div');
   div.className = 'message elthros';
   div.innerHTML = `
-    <div class="msg-avatar">💀</div>
+    <div class="msg-avatar">📖</div>
     <div class="msg-body">
-      <div class="msg-sender">Archivist Elthros</div>
+      <div class="msg-sender">Asher Applegate</div>
       <div class="msg-bubble">${formatMessage(text)}</div>
     </div>
   `;
   msgs.appendChild(div);
   scrollBottom();
 }
- 
+
 function showTyping() {
   const msgs = document.getElementById('messages');
   const div = document.createElement('div');
   div.className = 'message elthros typing-indicator';
   div.id = 'typingIndicator';
   div.innerHTML = `
-    <div class="msg-avatar">💀</div>
+    <div class="msg-avatar">📖</div>
     <div class="msg-body">
-      <div class="msg-sender">Archivist Elthros</div>
+      <div class="msg-sender">Asher Applegate</div>
       <div class="msg-bubble">
         <div class="typing-dot"></div>
         <div class="typing-dot"></div>
@@ -1006,16 +1007,16 @@ function showTyping() {
   msgs.appendChild(div);
   scrollBottom();
 }
- 
+
 function removeTyping() {
   document.getElementById('typingIndicator')?.remove();
 }
- 
+
 function scrollBottom() {
   const msgs = document.getElementById('messages');
   msgs.scrollTop = msgs.scrollHeight;
 }
- 
+
 function clearChat() {
   conversationHistory = [];
   localStorage.removeItem(STORAGE_KEY);
@@ -1027,21 +1028,21 @@ function clearChat() {
   welcome.id = 'welcomeMsg';
   welcome.innerHTML = `
     <div class="welcome-rune">📜</div>
-    <div class="welcome-title">Archivist Elthros</div>
+    <div class="welcome-title">Asher Applegate</div>
     <div class="welcome-divider"></div>
-    <p class="welcome-text">"Ah... another seeker of knowledge. I am Elthros, keeper of this campaign's chronicle. I have recorded every session, catalogued every soul you have encountered, and preserved every secret your party has uncovered. Ask me anything — I forget nothing."</p>
+    <p class="welcome-text">"You've come seeking knowledge? Good. I am Asher Applegate, Loremaster — keeper of this campaign's chronicle. I have recorded every session, catalogued every soul you have encountered, and preserved every secret your party has uncovered. Ask me anything."</p>
     <div class="welcome-divider"></div>
     <p class="welcome-text" style="font-size:13px;opacity:0.6">My knowledge is drawn from your session chronicles and the GM's lore entries. I will tell you plainly if something lies beyond my records.</p>
   `;
   msgs.appendChild(welcome);
 }
- 
+
 function setLoading(val) {
   isLoading = val;
   document.getElementById('sendBtn').disabled = val;
   document.getElementById('chatInput').disabled = val;
 }
- 
+
 function formatMessage(text) {
   return text
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -1051,25 +1052,25 @@ function formatMessage(text) {
     .replace(/\n/g, '<br>')
     .replace(/^/, '<p>').replace(/$/, '</p>');
 }
- 
+
 function escHtml(t) {
   return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
- 
+
 // ══════════════════════════════════════════════════════════════
 //  GM PANEL
 // ══════════════════════════════════════════════════════════════
 let gmAuthed = false;
- 
+
 function openGM() {
   document.getElementById('gmOverlay').classList.add('open');
   if (gmAuthed) showEditor();
 }
- 
+
 function closeGM() {
   document.getElementById('gmOverlay').classList.remove('open');
 }
- 
+
 function gmAuth() {
   const pw = document.getElementById('gmPassword').value;
   if (pw === GM_PASSWORD) {
@@ -1081,35 +1082,35 @@ function gmAuth() {
     document.getElementById('gmError').style.display = 'block';
   }
 }
- 
+
 function showEditor() {
   document.getElementById('gmLogin').style.display = 'none';
   document.getElementById('gmEditor').classList.add('visible');
 }
- 
+
 async function loadEntriesIntoEditor() {
   loreEntries = await fetchLoreEntries();
   renderEntries();
 }
- 
+
 function addEntry() {
   const name = document.getElementById('entryName').value.trim();
   const cat = document.getElementById('entryCat').value;
   const desc = document.getElementById('entryDesc').value.trim();
   if (!name || !desc) return;
- 
+
   loreEntries.push({ name, category: cat, description: desc });
   renderEntries();
- 
+
   document.getElementById('entryName').value = '';
   document.getElementById('entryDesc').value = '';
 }
- 
+
 function removeEntry(i) {
   loreEntries.splice(i, 1);
   renderEntries();
 }
- 
+
 function renderEntries() {
   const list = document.getElementById('entriesList');
   document.getElementById('entryCount').textContent = loreEntries.length;
@@ -1128,7 +1129,7 @@ function renderEntries() {
     list.appendChild(div);
   });
 }
- 
+
 async function saveEntries() {
   const status = document.getElementById('gmSaveStatus');
   status.textContent = 'Saving...';

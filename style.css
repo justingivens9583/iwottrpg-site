@@ -492,7 +492,6 @@ body {
 .notes-frame-box iframe {
   display: block;
   width: 100%;
-  filter: invert(1) hue-rotate(180deg) saturate(0.6) brightness(0.9);
 }
 
 .open-doc-btn {

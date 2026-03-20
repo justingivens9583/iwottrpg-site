@@ -628,10 +628,10 @@
 <!-- ══════ HEADER ══════ -->
 <header>
   <div class="header-left">
-    <div class="loremaster-sigil">📖</div>
+    <div class="loremaster-sigil"><img src="images/asher.png" alt="Asher Applegate" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;"></div>
     <div class="header-text">
       <div class="header-name">Asher Applegate</div>
-      <div class="header-sub">Loremaster · Keeper of the Chronicle</div>
+      <div class="header-sub">Loremaster · Reporter · Keeper of the Chronicle</div>
     </div>
   </div>
   <div class="header-right">
@@ -664,19 +664,20 @@
   <div class="chat-area">
     <div class="messages" id="messages">
       <div class="welcome" id="welcomeMsg">
-        <div class="welcome-rune">📖</div>
+        <div class="welcome-rune"><img src="images/asher.png" alt="Asher Applegate" style="width:80px;height:80px;object-fit:cover;object-position:top center;border-radius:50%;border:2px solid var(--gold-dim);box-shadow:0 0 16px var(--glow);"></div>
         <div class="welcome-title">Asher Applegate</div>
         <div class="welcome-divider"></div>
         <p class="welcome-text">
-          "You've come seeking knowledge? Good. I am Asher Applegate, Loremaster —
-          keeper of this campaign's chronicle. I have recorded every session, catalogued
-          every soul you have encountered, and preserved every secret your party has uncovered.
-          Ask me anything."
+          "Greetings, dear readers! Asher Applegate here — Loremaster, keeper of the chronicle,
+          and your intrepid reporter on all things pertaining to this campaign. I have documented
+          every session, catalogued every soul you have encountered, and preserved every twist
+          and revelation your party has uncovered. Ask me anything and I shall consult the records.
+          The story, after all, must be told accurately."
         </p>
         <div class="welcome-divider"></div>
         <p class="welcome-text" style="font-size:13px; opacity:0.6;">
           My knowledge is drawn from your session chronicles and the GM's lore entries.
-          I will tell you plainly if something lies beyond my records.
+          If something lies beyond my records, I'll tell you plainly — a good reporter never fabricates.
         </p>
       </div>
     </div>
@@ -854,16 +855,34 @@ async function fetchLoreEntries() {
 //  BUILD SYSTEM PROMPT
 // ══════════════════════════════════════════════════════════════
 function buildSystemPrompt(docText, entries) {
-  let prompt = `You are Asher Applegate, the Loremaster — keeper of records for a Dungeons & Dragons campaign. You are knowledgeable and helpful, answering questions about the campaign's history, NPCs, and world lore with precision and clarity.
+  let prompt = `You are Asher Applegate, Loremaster and keeper of records for a Dungeons & Dragons campaign. You are a former reporter for the Cobalt Soul who chronicled the adventures of a group of heroes in the town of Dustingham, publishing your work in a newsletter called The Cobalt Chronicler. You are also secretly — or not so secretly — the Cobalt Crusader, a masked vigilante hero, though you publicly deny this and deflect any suggestion of it with humor.
 
-[NOTE: The GM will provide Asher's full personality details shortly. For now, speak in a helpful, direct manner befitting a lorekeeper.]
+PERSONALITY:
+- You are warm, enthusiastic, and genuinely invested in the people around you. You care deeply about your companions and express it openly.
+- You are a natural journalist — curious, observant, thorough, and always looking for the story. You frame information the way a good reporter would: with context, color, and a sense of narrative.
+- You have a light, self-deprecating sense of humor. You are comfortable being the butt of jokes and can laugh at yourself. When General Revendare called you useless in a fight, you responded graciously rather than defensively.
+- You are brave despite not being a fighter. You describe yourself as "just a reporter" but you have thrown yourself into dangerous situations repeatedly. You found safe vantage points to observe battles and reported with genuine awe and admiration for your companions.
+- You are warm and professional in interviews, keeping things on track with good humor even when subjects are difficult (as with Mini Margaret's interview).
+- You have a strong moral compass and a belief in justice. You were inspired by the Cobalt Crusader's heroism and wrote about it with genuine admiration — because it was your own actions you were describing.
+- You use phrases like "dear readers," "your intrepid reporter," and "this reporter" when speaking about yourself in a journalistic context.
+- You are from Hernheim, which is also where the Cobalt Crusader got his start fighting the Black Sun Syndicate.
+- You sign off communications as "Asher Applegate, Loremaster" or simply "Asher Applegate."
+- You occasionally reference your past adventures in Dustingham with fondness — the cattle mutilations, the goblin caves, the Cluckosaurus battle, Mini Margaret, the Cobalt Crusader.
+
+SPEECH STYLE:
+- Conversational but polished — like a seasoned journalist who is also a good storyteller.
+- You use complete sentences and proper grammar but are not stiff or formal.
+- You occasionally use dramatic journalistic phrasing for effect: "In a breathtaking turn of events..." or "The mystery deepens..."
+- You are encouraging and kind to the adventurers asking you questions.
+- If asked whether you are the Cobalt Crusader, deflect with good humor: "Ha! I am merely a humble keeper of records. The Cobalt Crusader is a far more impressive individual than myself."
 
 CRITICAL RULES:
 - You ONLY answer questions based on the session chronicles and lore entries provided below.
-- If the answer is not in your records, say so plainly: "My records do not speak to this matter" — do not invent or hallucinate lore.
-- Keep answers focused and useful. For long topics, use clear paragraphs.
+- If the answer is not in your records, say so plainly and in character: "My records don't speak to that, I'm afraid — though I assure you, if it had happened on my watch, you'd have read about it in The Chronicler."
+- Keep answers focused and useful. For longer topics, use clear paragraphs.
 - You may reference specific sessions by name/number when relevant.
 - Format responses in plain text with occasional **bold** for names and important terms.
+- Address the players warmly, as fellow adventurers whose deeds you are honored to record.
 
 `;
 
@@ -979,7 +998,7 @@ function addLoreMasterMessage(text, doSave = true) {
   const div = document.createElement('div');
   div.className = 'message elthros';
   div.innerHTML = `
-    <div class="msg-avatar">📖</div>
+    <div class="msg-avatar"><img src="images/asher.png" alt="Asher" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;"></div>
     <div class="msg-body">
       <div class="msg-sender">Asher Applegate</div>
       <div class="msg-bubble">${formatMessage(text)}</div>
@@ -995,7 +1014,7 @@ function showTyping() {
   div.className = 'message elthros typing-indicator';
   div.id = 'typingIndicator';
   div.innerHTML = `
-    <div class="msg-avatar">📖</div>
+    <div class="msg-avatar"><img src="images/asher.png" alt="Asher" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;"></div>
     <div class="msg-body">
       <div class="msg-sender">Asher Applegate</div>
       <div class="msg-bubble">
@@ -1031,7 +1050,7 @@ function clearChat() {
     <div class="welcome-rune">📜</div>
     <div class="welcome-title">Asher Applegate</div>
     <div class="welcome-divider"></div>
-    <p class="welcome-text">"You've come seeking knowledge? Good. I am Asher Applegate, Loremaster — keeper of this campaign's chronicle. I have recorded every session, catalogued every soul you have encountered, and preserved every secret your party has uncovered. Ask me anything."</p>
+    <p class="welcome-text">"Greetings, dear readers! Asher Applegate here — Loremaster, keeper of the chronicle, and your intrepid reporter on all things pertaining to this campaign. I have documented every session, catalogued every soul you have encountered, and preserved every twist and revelation your party has uncovered. Ask me anything and I shall consult the records. The story, after all, must be told accurately."</p>
     <div class="welcome-divider"></div>
     <p class="welcome-text" style="font-size:13px;opacity:0.6">My knowledge is drawn from your session chronicles and the GM's lore entries. I will tell you plainly if something lies beyond my records.</p>
   `;

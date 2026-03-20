@@ -276,27 +276,28 @@
     border-radius: 4px;
     font-size: 15px;
     line-height: 1.75;
+    color: var(--bone) !important;
   }
 
   .message.loremaster .msg-bubble {
     background: linear-gradient(135deg, rgba(160,200,176,0.06), rgba(20,16,10,0.8));
     border: 1px solid #2a4a38;
-    color: var(--bone);
+    color: var(--bone) !important;
     border-left: 3px solid var(--loremaster);
   }
 
   .message.user .msg-bubble {
     background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(20,16,10,0.8));
     border: 1px solid var(--stone-light);
-    color: var(--bone);
+    color: var(--bone) !important;
     border-right: 3px solid var(--gold);
     text-align: left;
   }
 
-  .msg-bubble p { margin-bottom: 10px; }
+  .msg-bubble p { margin-bottom: 10px; color: var(--bone) !important; }
   .msg-bubble p:last-child { margin-bottom: 0; }
-  .msg-bubble strong { color: var(--gold-light); font-weight: 600; }
-  .msg-bubble em { color: var(--loremaster); }
+  .msg-bubble strong { color: var(--gold-light) !important; font-weight: 600; }
+  .msg-bubble em { color: var(--loremaster) !important; }
 
   /* Typing indicator */
   .typing-indicator .msg-bubble {

@@ -5,6 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IWO TTRPG Hub</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    @keyframes d20spin {
+      0%   { transform: rotate(0deg) scale(1); }
+      25%  { transform: rotate(180deg) scale(1.2); }
+      75%  { transform: rotate(540deg) scale(1.2); }
+      100% { transform: rotate(720deg) scale(1); }
+    }
+    .d20-spinning { animation: d20spin 0.8s ease-in-out forwards !important; }
+
+    .roll-result {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: linear-gradient(160deg, #1e1812, #0f0c08);
+      border: 1px solid var(--stone-light);
+      border-radius: 6px;
+      padding: 32px 48px;
+      text-align: center;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      box-shadow: 0 0 60px rgba(0,0,0,0.8);
+    }
+    .roll-result.show {
+      opacity: 1;
+      pointer-events: all;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .roll-number {
+      font-family: 'Cinzel', serif;
+      font-size: 80px;
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: 0 0 30px currentColor;
+    }
+    .roll-number.crit    { color: #f0d080; }
+    .roll-number.fail    { color: #c05040; }
+    .roll-number.normal  { color: #c9a84c; }
+    .roll-label {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 8px;
+      display: block;
+    }
+    .roll-flavor {
+      font-family: 'Crimson Text', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: #8a7a60;
+      margin-top: 8px;
+      display: block;
+    }
+    .roll-close {
+      margin-top: 20px;
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #5a4a3a;
+      background: transparent;
+      border: 1px solid #3a3028;
+      padding: 7px 20px;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.15s;
+    }
+    .roll-close:hover { border-color: var(--gold-dim); color: var(--gold); }
+    .roll-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 998;
+      display: none;
+    }
+    .roll-overlay.show { display: block; }
+  </style>
 </head>
 <body>
 
@@ -40,7 +118,11 @@
   <!-- ══════ HERO ══════ -->
   <div class="page-wrapper">
     <div class="hero">
-      <div class="hero-crest"><img src="d20.png" alt="d20" style="width:80px;height:80px;object-fit:contain;filter:drop-shadow(0 0 20px rgba(201,168,76,0.5));"></div>
+      <div class="hero-crest">
+        <img id="d20img" src="d20.png" alt="d20" onclick="rollD20()"
+          style="width:80px;height:80px;object-fit:contain;filter:drop-shadow(0 0 20px rgba(201,168,76,0.5));cursor:pointer;transition:filter 0.2s;"
+          title="Click to roll!">
+      </div>
       <h1 class="hero-title">IWO TTRPG Hub</h1>
       <p class="hero-subtitle">Your portal to adventures past, present, and future</p>
       <div class="divider"></div>
@@ -81,6 +163,71 @@
       </div>
     </div>
   </div>
+  <!-- Roll result popup -->
+  <div class="roll-overlay" id="rollOverlay" onclick="closeRoll()"></div>
+  <div class="roll-result" id="rollResult">
+    <div class="roll-number" id="rollNumber">20</div>
+    <span class="roll-label" id="rollLabel">Natural 20!</span>
+    <span class="roll-flavor" id="rollFlavor">The gods smile upon you.</span>
+    <button class="roll-close" onclick="closeRoll()">Roll Again</button>
+  </div>
+
+  <script>
+    const flavors = {
+      1:  { label: "Critical Fail!", flavor: "Nat 1. You trip over your own feet.", cls: "fail" },
+      2:  { label: "Rolled a 2", flavor: "Perhaps adventuring wasn't your calling.", cls: "normal" },
+      3:  { label: "Rolled a 3", flavor: "The dice are not with you today.", cls: "normal" },
+      4:  { label: "Rolled a 4", flavor: "A humble result for humble times.", cls: "normal" },
+      5:  { label: "Rolled a 5", flavor: "Better than a 1, barely.", cls: "normal" },
+      6:  { label: "Rolled a 6", flavor: "The dungeon laughs softly.", cls: "normal" },
+      7:  { label: "Rolled a 7", flavor: "You tried your best.", cls: "normal" },
+      8:  { label: "Rolled an 8", flavor: "Not terrible. Not great.", cls: "normal" },
+      9:  { label: "Rolled a 9", flavor: "Just shy of average.", cls: "normal" },
+      10: { label: "Rolled a 10", flavor: "Right down the middle.", cls: "normal" },
+      11: { label: "Rolled an 11", flavor: "The scales tip ever so slightly.", cls: "normal" },
+      12: { label: "Rolled a 12", flavor: "Fortune begins to favor you.", cls: "normal" },
+      13: { label: "Rolled a 13", flavor: "An unlucky number... or is it?", cls: "normal" },
+      14: { label: "Rolled a 14", flavor: "A solid result, adventurer.", cls: "normal" },
+      15: { label: "Rolled a 15", flavor: "The winds of fate blow in your favor.", cls: "normal" },
+      16: { label: "Rolled a 16", flavor: "A fine roll indeed.", cls: "normal" },
+      17: { label: "Rolled a 17", flavor: "The party nods approvingly.", cls: "normal" },
+      18: { label: "Rolled an 18", flavor: "Almost legendary.", cls: "normal" },
+      19: { label: "Rolled a 19", flavor: "So close to perfection.", cls: "normal" },
+      20: { label: "Natural 20!", flavor: "The gods smile upon you.", cls: "crit" },
+    };
+
+    let rolling = false;
+
+    function rollD20() {
+      if (rolling) return;
+      rolling = true;
+
+      const img = document.getElementById('d20img');
+      img.classList.add('d20-spinning');
+
+      setTimeout(() => {
+        const roll = Math.floor(Math.random() * 20) + 1;
+        const data = flavors[roll];
+
+        const numEl = document.getElementById('rollNumber');
+        numEl.textContent = roll;
+        numEl.className = `roll-number ${data.cls}`;
+        document.getElementById('rollLabel').textContent = data.label;
+        document.getElementById('rollFlavor').textContent = data.flavor;
+
+        document.getElementById('rollOverlay').classList.add('show');
+        document.getElementById('rollResult').classList.add('show');
+
+        img.classList.remove('d20-spinning');
+        rolling = false;
+      }, 850);
+    }
+
+    function closeRoll() {
+      document.getElementById('rollOverlay').classList.remove('show');
+      document.getElementById('rollResult').classList.remove('show');
+    }
+  </script>
 
 </body>
 </html>

@@ -68,7 +68,7 @@
       display: flex;
       flex-direction: row;
       align-items: flex-end;
-      gap: 0px;
+      gap: 0;
       z-index: 10;
       perspective: 1000px;
     }
@@ -79,7 +79,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 4px;
+      margin: 0;
+      padding: 0;
     }
 
     .book-label {
@@ -99,12 +101,14 @@
     .book-wrapper:hover .book-label { opacity: 1; transform: translateY(0); }
 
     .book {
-      width: clamp(80px, 9vw, 130px);
+      width: 285px;
       height: clamp(220px, 28vw, 380px);
       position: relative;
       cursor: pointer;
       transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s;
       filter: drop-shadow(3px 6px 16px rgba(0,0,0,0.8));
+      margin: 0;
+      padding: 0;
     }
 
     .book:hover {

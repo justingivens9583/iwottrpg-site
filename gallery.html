@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Gallery — IWO TTRPG Hub</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <style>
+
+    /* ── GALLERY PAGE OVERRIDES ── */
+    body { overflow: hidden; }
+
+    .gallery-page {
+      margin-left: var(--nav-width);
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── DESK BACKGROUND ── */
+    .desk-bg {
+      position: absolute;
+      inset: 0;
+      background: url('images/Gallery Desk.png') center center / cover no-repeat;
+      z-index: 0;
+    }
+    .desk-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 3, 1, 0.35);
+    }
+
+    /* ── PAGE TITLE OVERLAY ── */
+    .gallery-title {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      text-align: center;
+      pointer-events: none;
+    }
+    .gallery-title h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(18px, 2.5vw, 30px);
+      font-weight: 900;
+      color: var(--gold-light);
+      text-shadow: 0 0 30px rgba(201,168,76,0.6), 0 2px 0 #3a2000;
+      letter-spacing: 4px;
+    }
+    .gallery-title p {
+      font-family: 'Crimson Text', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--bone-dim);
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    /* ── BOOKS CONTAINER ── */
+    .books-stage {
+      position: absolute;
+      bottom: 6%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: flex-end;
+      gap: 28px;
+      z-index: 10;
+      perspective: 1200px;
+    }
+
+    /* ── INDIVIDUAL BOOK ── */
+    .book-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .book-label {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.3s, transform 0.3s;
+      text-shadow: 0 0 10px rgba(0,0,0,0.8);
+      pointer-events: none;
+    }
+
+    .book-wrapper:hover .book-label { opacity: 1; transform: translateY(0); }
+
+    .book {
+      width: clamp(70px, 9vw, 120px);
+      height: clamp(200px, 26vw, 340px);
+      position: relative;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transform: rotateY(-8deg) rotateX(2deg);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s;
+      filter: drop-shadow(4px 8px 20px rgba(0,0,0,0.7));
+    }
+
+    .book:hover {
+      transform: rotateY(-8deg) rotateX(2deg) translateY(-20px) scale(1.05);
+      filter: drop-shadow(4px 16px 32px rgba(0,0,0,0.8)) drop-shadow(0 0 12px rgba(201,168,76,0.3));
+    }
+
+    .book.is-open {
+      transform: rotateY(-8deg) rotateX(2deg) translateY(-30px) scale(1.08);
+      filter: drop-shadow(4px 20px 40px rgba(0,0,0,0.9)) drop-shadow(0 0 20px rgba(201,168,76,0.5));
+    }
+
+    .book img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 2px 6px 6px 2px;
+      display: block;
+    }
+
+    /* ── GALLERY PANEL ── */
+    .gallery-panel {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+
+    .gallery-panel.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .panel-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 3, 1, 0.82);
+      backdrop-filter: blur(4px);
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+      width: 92%;
+      max-width: 1100px;
+      height: 82vh;
+      background: linear-gradient(160deg, rgba(22,16,10,0.97), rgba(10,7,4,0.98));
+      border: 1px solid var(--stone-light);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 0 80px rgba(0,0,0,0.9);
+    }
+
+    .panel-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--stone);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .panel-title {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .panel-close {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--bone-dim);
+      background: transparent;
+      border: 1px solid var(--stone);
+      padding: 6px 14px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.15s;
+    }
+    .panel-close:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+    /* ── GRID OF IMAGES ── */
+    .image-grid {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+      align-content: start;
+    }
+
+    .image-grid::-webkit-scrollbar { width: 4px; }
+    .image-grid::-webkit-scrollbar-thumb { background: var(--stone-light); border-radius: 2px; }
+
+    .grid-item {
+      position: relative;
+      cursor: pointer;
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid var(--stone);
+      aspect-ratio: 3/4;
+      transition: border-color 0.2s, transform 0.2s;
+      background: var(--dark-surface);
+    }
+
+    .grid-item:hover {
+      border-color: var(--gold-dim);
+      transform: translateY(-3px);
+    }
+
+    .grid-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      transition: transform 0.3s;
+    }
+
+    .grid-item:hover img { transform: scale(1.04); }
+
+    .grid-item-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(5,3,1,0.92), transparent);
+      padding: 20px 8px 8px;
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: var(--gold);
+      text-align: center;
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+
+    .grid-item .maximize-btn {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 28px; height: 28px;
+      background: rgba(10,7,4,0.8);
+      border: 1px solid var(--stone-light);
+      border-radius: 3px;
+      color: var(--gold);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s, border-color 0.2s;
+    }
+
+    .grid-item:hover .maximize-btn { opacity: 1; }
+    .grid-item .maximize-btn:hover { border-color: var(--gold); }
+
+    /* ── FULLSCREEN VIEWER ── */
+    .fullscreen-viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .fullscreen-viewer.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .fs-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 2, 1, 0.95);
+      cursor: pointer;
+    }
+
+    .fs-img-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fs-img-wrap img {
+      max-width: 90vw;
+      max-height: 88vh;
+      object-fit: contain;
+      border-radius: 3px;
+      box-shadow: 0 0 80px rgba(0,0,0,0.9);
+      display: block;
+    }
+
+    .fs-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 40px 24px 20px;
+      background: linear-gradient(to top, rgba(3,2,1,0.92) 0%, rgba(3,2,1,0.6) 60%, transparent 100%);
+      border-radius: 0 0 3px 3px;
+      text-align: center;
+    }
+
+    .fs-caption-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(14px, 2vw, 22px);
+      font-weight: 700;
+      color: var(--gold-light);
+      text-shadow: 0 0 20px rgba(201,168,76,0.5);
+      letter-spacing: 2px;
+      display: block;
+    }
+
+    .fs-caption-desc {
+      font-family: 'Crimson Text', serif;
+      font-style: italic;
+      font-size: clamp(12px, 1.5vw, 16px);
+      color: var(--bone-dim);
+      margin-top: 4px;
+      display: block;
+    }
+
+    .fs-close {
+      position: absolute;
+      top: 20px; right: 20px;
+      width: 40px; height: 40px;
+      background: rgba(10,7,4,0.85);
+      border: 1px solid var(--stone-light);
+      border-radius: 50%;
+      color: var(--gold);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: all 0.15s;
+    }
+    .fs-close:hover { border-color: var(--gold); background: rgba(201,168,76,0.1); }
+
+    .fs-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px; height: 44px;
+      background: rgba(10,7,4,0.75);
+      border: 1px solid var(--stone-light);
+      border-radius: 50%;
+      color: var(--gold);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: all 0.15s;
+    }
+    .fs-nav:hover { border-color: var(--gold); background: rgba(201,168,76,0.1); }
+    .fs-nav.prev { left: -60px; }
+    .fs-nav.next { right: -60px; }
+
+    /* ── HINT TEXT ── */
+    .desk-hint {
+      position: absolute;
+      bottom: 3%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Crimson Text', serif;
+      font-style: italic;
+      font-size: 12px;
+      color: rgba(212, 196, 160, 0.45);
+      letter-spacing: 2px;
+      z-index: 5;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ══════ NAVBAR ══════ -->
+  <div class="navbar">
+    <div class="nav-brand">
+      <span class="nav-brand-title">IWO TTRPG Hub</span>
+      <span class="nav-brand-sub">Campaign Portal</span>
+      <div class="nav-divider"></div>
+    </div>
+    <div class="nav-section">
+      <span class="nav-section-label">Campaign</span>
+      <a href="index.html"><span class="nav-icon">🏠</span> Home</a>
+      <a href="current-characters.html"><span class="nav-icon">⚔</span> Characters</a>
+      <a href="notes.html"><span class="nav-icon">📜</span> Session Notes</a>
+      <a href="calendar.html"><span class="nav-icon">📅</span> Calendar</a>
+      <a href="https://drive.google.com/file/d/1GnxzF5Nyht1wA8ru7eCaglsKCsq2jS4V/view?usp=sharing" target="_blank"><span class="nav-icon">🗺</span> World Map</a>
+    </div>
+    <div class="nav-section">
+      <span class="nav-section-label">Tools</span>
+      <a href="archivist.html"><span class="nav-icon">📖</span> Lore Master</a>
+      <a href="travel-guides.html"><span class="nav-icon">🏛</span> Travel Guides</a>
+      <a href="gallery.html" class="active"><span class="nav-icon">🖼</span> Gallery</a>
+      <a href="dnd-runner.html"><span class="nav-icon">🏃</span> Runner Game</a>
+      <a href="http://foundry.iwottrpg.com:30000/" target="_blank"><span class="nav-icon">🎲</span> Foundry VTT</a>
+    </div>
+    <div class="nav-footer">
+      <p class="nav-footer-text">"The adventure<br>continues..."</p>
+    </div>
+  </div>
+
+  <!-- ══════ GALLERY PAGE ══════ -->
+  <div class="gallery-page">
+
+    <!-- Desk background -->
+    <div class="desk-bg"></div>
+
+    <!-- Title -->
+    <div class="gallery-title">
+      <h1>The Gallery</h1>
+      <p>Click a tome to browse its contents</p>
+    </div>
+
+    <!-- Books on the desk -->
+    <div class="books-stage">
+
+      <div class="book-wrapper">
+        <div class="book" data-category="characters" id="book-characters">
+          <img src="images/Gallery Characters Book.png" alt="Characters">
+        </div>
+        <span class="book-label">Characters</span>
+      </div>
+
+      <div class="book-wrapper">
+        <div class="book" data-category="creatures" id="book-creatures">
+          <img src="images/Gallery Creatures Book.png" alt="Creatures">
+        </div>
+        <span class="book-label">Creatures</span>
+      </div>
+
+      <div class="book-wrapper">
+        <div class="book" data-category="locations" id="book-locations">
+          <img src="images/Gallery Locations Book.png" alt="Locations">
+        </div>
+        <span class="book-label">Locations</span>
+      </div>
+
+      <div class="book-wrapper">
+        <div class="book" data-category="weapons" id="book-weapons">
+          <img src="images/Gallery Weapons and Artifacts Book.png" alt="Weapons and Artifacts">
+        </div>
+        <span class="book-label">Weapons & Artifacts</span>
+      </div>
+
+    </div>
+
+    <div class="desk-hint">Click a book to open it</div>
+  </div>
+
+  <!-- ══════ GALLERY PANEL ══════ -->
+  <div class="gallery-panel" id="galleryPanel">
+    <div class="panel-backdrop" id="panelBackdrop"></div>
+    <div class="panel-inner">
+      <div class="panel-header">
+        <span class="panel-title" id="panelTitle">Characters</span>
+        <button class="panel-close" onclick="closePanel()">✕ Close</button>
+      </div>
+      <div class="image-grid" id="imageGrid"></div>
+    </div>
+  </div>
+
+  <!-- ══════ FULLSCREEN VIEWER ══════ -->
+  <div class="fullscreen-viewer" id="fullscreenViewer">
+    <div class="fs-backdrop" onclick="closeFullscreen()"></div>
+    <div class="fs-img-wrap">
+      <button class="fs-nav prev" onclick="navigateFS(-1)">&#8249;</button>
+      <img id="fsImage" src="" alt="">
+      <div class="fs-caption">
+        <span class="fs-caption-title" id="fsCaptionTitle"></span>
+        <span class="fs-caption-desc" id="fsCaptionDesc"></span>
+      </div>
+      <button class="fs-nav next" onclick="navigateFS(1)">&#8250;</button>
+    </div>
+    <button class="fs-close" onclick="closeFullscreen()">✕</button>
+  </div>
+
+  <script>
+  // ══════════════════════════════════════════════════════════════
+  //  GALLERY DATA
+  // ══════════════════════════════════════════════════════════════
+  const CATEGORIES = {
+    characters: {
+      label: 'Characters',
+      items: [
+        { file: 'angus_full_art.png',               title: 'Angus "Fuzzy" Guinness' },
+        { file: 'baradren_full_art.png',             title: 'Baradren the Pathfinder' },
+        { file: 'crow_full_art.png',                 title: 'Crow' },
+        { file: 'elias_full_art.png',                title: 'Elias Merryvale' },
+        { file: 'farghus_full_art.png',              title: 'Farghus Suregrip "The Undying"' },
+        { file: 'gingerbeard_full_art.png',          title: 'LL Gingerbeard' },
+        { file: 'lucyana_full_art.png',              title: 'Lucyana Orilith' },
+        { file: 'obadiah_full_art.png',              title: 'Obadiah Clementine' },
+        { file: 'older_full_art.png',                title: 'Storm Older Offic' },
+        { file: 'perkas_full_art.png',               title: 'Perkas' },
+        { file: 'squeak_full_art.png',               title: 'Squeak' },
+        { file: 'tharion_full_art.png',              title: 'Tharion Voss — Guildmaster of the Iron Wolves Organization' },
+        { file: 'younger_full_art.png',              title: 'Storm Younger Offic' },
+        { file: 'Bramble Full Art.png',              title: 'Bramble' },
+        { file: 'Iron Wolves Organization.webp',     title: 'Iron Wolves Organization before setting out to Greenest' },
+        { file: 'Iron Wolves Organization v2.png',   title: 'Iron Wolves Organization after returning from Greenest' },
+      ]
+    },
+    creatures: {
+      label: 'Creatures',
+      items: [
+        { file: 'Dragonclaw Art.png',         title: 'Order of the Dragon Cultist' },
+        { file: 'Farghus and Cyanwrath.png',  title: 'Farghus and Cyanwrath fighting in the hatchery of the raider\'s camp' },
+        { file: 'Party Horses Art.png',       title: 'Horses gifted to the party from Leosin' },
+      ]
+    },
+    locations: {
+      label: 'Locations',
+      items: [
+        { file: 'Caravan to Greenest.png',   title: 'Caravan setting out to Greenest' },
+        { file: 'Elturel Beacon Art.webp',   title: 'The Companion of Elturel' },
+        { file: 'Elturel City.webp',         title: 'City of Elturel' },
+        { file: 'Elturel.webp',              title: 'Cliffs of Elturel' },
+        { file: 'Cave Wall Prophecy.png',    title: 'Prophecy found on the cave wall of the hatchery in the raider\'s camp' },
+      ]
+    },
+    weapons: {
+      label: 'Weapons & Artifacts',
+      items: [
+        { file: 'LL Pact Weapon.png',              title: 'Infused weapon of LL Gingerbeard' },
+        { file: 'The Fang of the First Howl.png',  title: 'Iron Wolves Organization weapon given to the Storm Brothers' },
+        { file: 'Wander_s Stone.webp',             title: 'Hearth Stones found inside the magical realm of the hearth' },
+      ]
+    }
+  };
+
+  // ══════════════════════════════════════════════════════════════
+  //  STATE
+  // ══════════════════════════════════════════════════════════════
+  let currentCategory = null;
+  let currentFSIndex  = 0;
+  let currentFSItems  = [];
+
+  // ══════════════════════════════════════════════════════════════
+  //  BOOK CLICKS
+  // ══════════════════════════════════════════════════════════════
+  document.querySelectorAll('.book').forEach(book => {
+    book.addEventListener('click', e => {
+      e.stopPropagation();
+      const cat = book.dataset.category;
+      openPanel(cat);
+    });
+  });
+
+  // ══════════════════════════════════════════════════════════════
+  //  PANEL
+  // ══════════════════════════════════════════════════════════════
+  function openPanel(category) {
+    currentCategory = category;
+    const data = CATEGORIES[category];
+    document.getElementById('panelTitle').textContent = data.label;
+
+    const grid = document.getElementById('imageGrid');
+    grid.innerHTML = '';
+
+    data.items.forEach((item, idx) => {
+      const div = document.createElement('div');
+      div.className = 'grid-item';
+
+      const img = document.createElement('img');
+      img.src = `images/${item.file}`;
+      img.alt = item.title;
+      img.loading = 'lazy';
+
+      const label = document.createElement('div');
+      label.className = 'grid-item-label';
+      label.textContent = item.title;
+
+      const maxBtn = document.createElement('button');
+      maxBtn.className = 'maximize-btn';
+      maxBtn.innerHTML = '⛶';
+      maxBtn.title = 'Fullscreen';
+      maxBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        openFullscreen(idx, data.items);
+      });
+
+      div.appendChild(img);
+      div.appendChild(label);
+      div.appendChild(maxBtn);
+      div.addEventListener('click', () => openFullscreen(idx, data.items));
+      grid.appendChild(div);
+    });
+
+    document.getElementById('galleryPanel').classList.add('open');
+  }
+
+  function closePanel() {
+    document.getElementById('galleryPanel').classList.remove('open');
+    currentCategory = null;
+  }
+
+  document.getElementById('panelBackdrop').addEventListener('click', closePanel);
+
+  // ══════════════════════════════════════════════════════════════
+  //  FULLSCREEN VIEWER
+  // ══════════════════════════════════════════════════════════════
+  function openFullscreen(idx, items) {
+    currentFSItems = items;
+    currentFSIndex = idx;
+    renderFS();
+    document.getElementById('fullscreenViewer').classList.add('open');
+  }
+
+  function renderFS() {
+    const item = currentFSItems[currentFSIndex];
+    document.getElementById('fsImage').src = `images/${item.file}`;
+    document.getElementById('fsImage').alt = item.title;
+    document.getElementById('fsCaptionTitle').textContent = item.title;
+
+    // Show nav arrows only if multiple items
+    document.querySelector('.fs-nav.prev').style.display = currentFSItems.length > 1 ? 'flex' : 'none';
+    document.querySelector('.fs-nav.next').style.display = currentFSItems.length > 1 ? 'flex' : 'none';
+  }
+
+  function navigateFS(dir) {
+    currentFSIndex = (currentFSIndex + dir + currentFSItems.length) % currentFSItems.length;
+    renderFS();
+  }
+
+  function closeFullscreen() {
+    document.getElementById('fullscreenViewer').classList.remove('open');
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (document.getElementById('fullscreenViewer').classList.contains('open')) {
+      if (e.key === 'ArrowLeft')  navigateFS(-1);
+      if (e.key === 'ArrowRight') navigateFS(1);
+      if (e.key === 'Escape')     closeFullscreen();
+    } else if (document.getElementById('galleryPanel').classList.contains('open')) {
+      if (e.key === 'Escape') closePanel();
+    }
+  });
+  </script>
+
+</body>
+</html>

@@ -507,71 +507,118 @@
   // ══════════════════════════════════════════════════════════════
   //  GALLERY DATA
   // ══════════════════════════════════════════════════════════════
-  const CATEGORIES = {
-    characters: {
-      label: 'Characters',
-      items: [
-        { file: 'angus_full_art.png',               title: 'Angus "Fuzzy" Guinness' },
-        { file: 'baradren_full_art.png',             title: 'Baradren the Pathfinder' },
-        { file: 'crow_full_art.png',                 title: 'Crow' },
-        { file: 'elias_full_art.png',                title: 'Elias Merryvale' },
-        { file: 'farghus_full_art.png',              title: 'Farghus Suregrip "The Undying"' },
-        { file: 'gingerbeard_full_art.png',          title: 'LL Gingerbeard' },
-        { file: 'lucyana_full_art.png',              title: 'Lucyana Orilith' },
-        { file: 'obadiah_full_art.png',              title: 'Obadiah Clementine' },
-        { file: 'older_full_art.png',                title: 'Storm Older Offic' },
-        { file: 'perkas_full_art.png',               title: 'Perkas' },
-        { file: 'squeak_full_art.png',               title: 'Squeak' },
-        { file: 'tharion_full_art.png',              title: 'Tharion Voss — Guildmaster of the Iron Wolves Organization' },
-        { file: 'younger_full_art.png',              title: 'Storm Younger Offic' },
-        { file: 'Bramble Full Art.png',              title: 'Bramble' },
-        { file: 'Iron Wolves Organization.webp',     title: 'Iron Wolves Organization before setting out to Greenest' },
-        { file: 'Iron Wolves Organization v2.png',   title: 'Iron Wolves Organization after returning from Greenest' },
-      ]
-    },
-    creatures: {
-      label: 'Creatures',
-      items: [
-        { file: 'Dragonclaw Art.png',         title: 'Order of the Dragon Cultist' },
-        { file: 'Farghus and Cyanwrath.png',  title: 'Farghus and Cyanwrath fighting in the hatchery of the raider\'s camp' },
-        { file: 'Party Horses Art.png',       title: 'Horses gifted to the party from Leosin' },
-      ]
-    },
-    locations: {
-      label: 'Locations',
-      items: [
-        { file: 'Caravan to Greenest.png',   title: 'Caravan setting out to Greenest' },
-        { file: 'Elturel Beacon Art.webp',   title: 'The Companion of Elturel' },
-        { file: 'Elturel City.webp',         title: 'City of Elturel' },
-        { file: 'Elturel.webp',              title: 'Cliffs of Elturel' },
-        { file: 'Cave Wall Prophecy.png',    title: 'Prophecy found on the cave wall of the hatchery in the raider\'s camp' },
-      ]
-    },
-    weapons: {
-      label: 'Weapons & Artifacts',
-      items: [
-        { file: 'LL Pact Weapon.png',              title: 'Infused weapon of LL Gingerbeard' },
-        { file: 'The Fang of the First Howl.png',  title: 'Iron Wolves Organization weapon given to the Storm Brothers' },
-        { file: 'Wander_s Stone.webp',             title: 'Hearth Stones found inside the magical realm of the hearth' },
-      ]
-    }
+  // ══════════════════════════════════════════════════════════════
+  //  CONFIG
+  // ══════════════════════════════════════════════════════════════
+  const JSONBIN_ID  = '69eff601856a6821897d7a2d';
+  const JSONBIN_KEY = '$2a$10$dmmW.BkgP6HNVGgCTh8rUeO7XwnMgZviE3DE630J5m/QVyjXyiYdy';
+  const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+
+  const CATEGORY_LABELS = {
+    characters: 'Characters',
+    creatures:  'Creatures',
+    locations:  'Locations',
+    weapons:    'Weapons & Artifacts'
+  };
+
+  // Seed data — loaded once if JSONBin is empty
+  const SEED_DATA = {
+    characters: [
+      { file: 'angus_full_art.png',                title: 'Angus "Fuzzy" Guinness' },
+      { file: 'baradren_full_art.png',             title: 'Baradren the Pathfinder' },
+      { file: 'crow_full_art.png',                 title: 'Crow' },
+      { file: 'elias_full_art.png',                title: 'Elias Merryvale' },
+      { file: 'farghus_full_art.png',              title: 'Farghus Suregrip "The Undying"' },
+      { file: 'gingerbeard_full_art.png',          title: 'LL Gingerbeard' },
+      { file: 'lucyana_full_art.png',              title: 'Lucyana Orilith' },
+      { file: 'obadiah_full_art.png',              title: 'Obadiah Clementine' },
+      { file: 'older_full_art.png',               title: 'Storm Older Offic' },
+      { file: 'perkas_full_art.png',               title: 'Perkas' },
+      { file: 'squeak_full_art.png',               title: 'Squeak' },
+      { file: 'tharion_full_art.png',              title: 'Tharion Voss — Guildmaster of the Iron Wolves Organization' },
+      { file: 'younger_full_art.png',              title: 'Storm Younger Offic' },
+      { file: 'Bramble Full Art.png',              title: 'Bramble' },
+      { file: 'Iron Wolves Organization.webp',     title: 'Iron Wolves Organization before setting out to Greenest' },
+      { file: 'Iron Wolves Organization v2.png',   title: 'Iron Wolves Organization after returning from Greenest' },
+    ],
+    creatures: [
+      { file: 'Dragonclaw Art.png',        title: 'Order of the Dragon Cultist' },
+      { file: 'Farghus and Cyanwrath.png', title: "Farghus and Cyanwrath fighting in the hatchery of the raider's camp" },
+      { file: 'Party Horses Art.png',      title: 'Horses gifted to the party from Leosin' },
+    ],
+    locations: [
+      { file: 'Caravan to Greenest.png',  title: 'Caravan setting out to Greenest' },
+      { file: 'Elturel Beacon Art.webp',  title: 'The Companion of Elturel' },
+      { file: 'Elturel City.webp',        title: 'City of Elturel' },
+      { file: 'Elturel.webp',             title: 'Cliffs of Elturel' },
+      { file: 'Cave Wall Prophecy.png',   title: "Prophecy found on the cave wall of the hatchery in the raider's camp" },
+    ],
+    weapons: [
+      { file: 'LL Pact Weapon.png',             title: 'Infused weapon of LL Gingerbeard' },
+      { file: 'The Fang of the First Howl.png', title: 'Iron Wolves Organization weapon given to the Storm Brothers' },
+      { file: 'Wander_s Stone.webp',            title: 'Hearth Stones found inside the magical realm of the hearth' },
+    ]
   };
 
   // ══════════════════════════════════════════════════════════════
   //  STATE
   // ══════════════════════════════════════════════════════════════
+  let CATEGORIES = {};
   let currentCategory = null;
   let currentFSIndex  = 0;
   let currentFSItems  = [];
 
   // ══════════════════════════════════════════════════════════════
-  //  BOOK CLICKS
+  //  LOAD FROM JSONBIN
   // ══════════════════════════════════════════════════════════════
-  document.querySelectorAll('.book').forEach(book => {
-    book.addEventListener('click', e => {
-      e.stopPropagation();
-      const cat = book.dataset.category;
-      openPanel(cat);
+  async function loadGalleryData() {
+    try {
+      const res = await fetch(JSONBIN_URL + '/latest', {
+        headers: { 'X-Master-Key': JSONBIN_KEY }
+      });
+      const data = await res.json();
+      const rec = data.record;
+
+      // If all categories are empty seed with default data
+      const isEmpty = Object.values(rec).every(arr => !arr || arr.length === 0);
+      if (isEmpty) {
+        await fetch(JSONBIN_URL, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+          body: JSON.stringify(SEED_DATA)
+        });
+        CATEGORIES = buildCategories(SEED_DATA);
+      } else {
+        CATEGORIES = buildCategories(rec);
+      }
+    } catch(e) {
+      console.warn('JSONBin load failed, using seed data:', e);
+      CATEGORIES = buildCategories(SEED_DATA);
+    }
+  }
+
+  function buildCategories(data) {
+    const result = {};
+    for (const key of Object.keys(CATEGORY_LABELS)) {
+      result[key] = {
+        label: CATEGORY_LABELS[key],
+        items: data[key] || []
+      };
+    }
+    return result;
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  INIT
+  // ══════════════════════════════════════════════════════════════
+  window.addEventListener('load', async () => {
+    await loadGalleryData();
+    // Wire up book clicks after data loads
+    document.querySelectorAll('.book').forEach(book => {
+      book.addEventListener('click', e => {
+        e.stopPropagation();
+        openPanel(book.dataset.category);
+      });
     });
   });
 

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery Admin — IWO TTRPG Hub</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* ── ADD ENTRY FORM ── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .form-row.full { grid-template-columns: 1fr; }
+
+    .form-label {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      opacity: 0.6;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--stone);
+      border-radius: 3px;
+      color: var(--bone);
+      font-family: 'Crimson Text', serif;
+      font-size: 15px;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .form-input:focus, .form-select:focus { border-color: var(--stone-light); }
+    .form-input::placeholder { color: #4a3a28; font-style: italic; }
+    .form-select { cursor: pointer; }
+    .form-select option { background: #1a1510; }
+
+    .form-hint {
+      font-family: 'Crimson Text', serif;
+      font-style: italic;
+      font-size: 12px;
+      color: #5a4a3a;
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* ── PREVIEW ── */
+    .preview-box {
+      width: 100%;
+      height: 180px;
+      background: rgba(255,255,255,0.02);
+      border: 1px dashed var(--stone);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .preview-box img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      display: none;
+    }
+
+    .preview-placeholder {
+      font-family: 'Crimson Text', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: #3a2a18;
+    }
+
+    /* ── ENTRIES LIST ── */
+    .category-block {
+      margin-bottom: 28px;
+    }
+
+    .category-block-title {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      opacity: 0.7;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--stone);
+    }
+
+    .entry-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .entry-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--stone);
+      border-radius: 3px;
+      padding: 8px 12px;
+    }
+
+    .entry-thumb {
+      width: 36px;
+      height: 44px;
+      object-fit: cover;
+      object-position: top;
+      border-radius: 2px;
+      flex-shrink: 0;
+      background: #1a1208;
+    }
+
+    .entry-info { flex: 1; min-width: 0; }
+
+    .entry-filename {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      color: var(--gold);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .entry-title {
+      font-size: 12px;
+      color: var(--bone-dim);
+      font-style: italic;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .entry-remove {
+      font-size: 14px;
+      color: #5a3a2a;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 2px;
+      transition: color 0.15s;
+      flex-shrink: 0;
+    }
+
+    .entry-remove:hover { color: #c06050; }
+
+    .empty-cat {
+      font-family: 'Crimson Text', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: #3a2a18;
+      padding: 8px 0;
+    }
+
+    /* ── STATUS ── */
+    .save-status-bar {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #6a8a5a;
+      text-align: center;
+      height: 20px;
+      margin-top: 6px;
+    }
+
+    /* ── LOGIN ── */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,8,4,0.92);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-box {
+      background: linear-gradient(160deg, #1e1812, #0f0c08);
+      border: 1px solid var(--stone-light);
+      border-radius: 4px;
+      padding: 40px 48px;
+      text-align: center;
+      max-width: 360px;
+      width: 100%;
+    }
+
+    .login-title {
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: 3px;
+      margin-bottom: 24px;
+    }
+
+    .login-input {
+      width: 220px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--stone-light);
+      border-radius: 3px;
+      color: var(--bone);
+      font-family: 'Crimson Text', serif;
+      font-size: 15px;
+      padding: 10px 16px;
+      text-align: center;
+      letter-spacing: 4px;
+      outline: none;
+      transition: border-color 0.15s;
+      display: block;
+      margin: 0 auto 12px;
+    }
+
+    .login-input:focus { border-color: var(--gold-dim); }
+
+    .login-error {
+      color: #c06050;
+      font-size: 12px;
+      font-style: italic;
+      margin-top: 8px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════ LOGIN ══════ -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+      <div class="login-title">⚗ Gallery Admin</div>
+      <input type="password" class="login-input" id="loginPw" placeholder="············" onkeydown="if(event.key==='Enter') doLogin()">
+      <button class="btn-primary" onclick="doLogin()">Enter</button>
+      <div class="login-error" id="loginError">Incorrect passphrase.</div>
+    </div>
+  </div>
+
+  <!-- ══════ NAVBAR ══════ -->
+  <div class="navbar">
+    <div class="nav-brand">
+      <span class="nav-brand-title">IWO TTRPG Hub</span>
+      <span class="nav-brand-sub">GM Admin</span>
+      <div class="nav-divider"></div>
+    </div>
+    <div class="nav-section">
+      <span class="nav-section-label">Campaign</span>
+      <a href="index.html"><span class="nav-icon">🏠</span> Home</a>
+      <a href="gallery.html"><span class="nav-icon">🖼</span> View Gallery</a>
+    </div>
+    <div class="nav-footer">
+      <p class="nav-footer-text">"The adventure<br>continues..."</p>
+    </div>
+  </div>
+
+  <!-- ══════ CONTENT ══════ -->
+  <div class="page-wrapper">
+
+    <div class="page-header">
+      <span class="page-eyebrow">GM Access Only</span>
+      <h1 class="page-title">Gallery Admin</h1>
+      <span class="page-subtitle">Add, remove, and manage gallery images</span>
+      <div class="page-divider"></div>
+    </div>
+
+    <div class="admin-wrapper">
+
+      <!-- ADD ENTRY -->
+      <div class="content-box" style="margin-bottom:28px;">
+        <h2>Add New Image</h2>
+
+        <div class="form-row">
+          <div>
+            <label class="form-label">Category</label>
+            <select class="form-select" id="addCategory">
+              <option value="characters">Characters</option>
+              <option value="creatures">Creatures</option>
+              <option value="locations">Locations</option>
+              <option value="weapons">Weapons & Artifacts</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Image Filename</label>
+            <input class="form-input" id="addFile" placeholder="e.g. new_character.png" oninput="updatePreview()">
+            <span class="form-hint">Must be uploaded to the images/ folder on GitHub first</span>
+          </div>
+        </div>
+
+        <div class="form-row full">
+          <div>
+            <label class="form-label">Description</label>
+            <input class="form-input" id="addTitle" placeholder="e.g. Rezmir the Black Wyrmspeaker">
+          </div>
+        </div>
+
+        <div class="preview-box" id="previewBox">
+          <img id="previewImg" src="" alt="Preview">
+          <span class="preview-placeholder" id="previewPlaceholder">Image preview will appear here</span>
+        </div>
+
+        <button class="btn-primary" onclick="addEntry()">+ Add to Gallery</button>
+      </div>
+
+      <!-- SAVE / STATUS -->
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:28px;">
+        <button class="btn-primary" onclick="saveAll()">💾 Save All Changes</button>
+        <button class="btn-secondary" onclick="loadAll()">↺ Reload from JSONBin</button>
+        <div class="save-status-bar" id="saveStatus"></div>
+      </div>
+
+      <!-- ENTRIES BY CATEGORY -->
+      <div class="content-box">
+        <h2>Current Gallery Entries</h2>
+        <div id="entriesContainer"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const GM_PASSWORD = 'justin3984';
+    const JSONBIN_ID  = '69eff601856a6821897d7a2d';
+    const JSONBIN_KEY = '$2a$10$dmmW.BkgP6HNVGgCTh8rUeO7XwnMgZviE3DE630J5m/QVyjXyiYdy';
+    const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+
+    const CATEGORY_LABELS = {
+      characters: 'Characters',
+      creatures:  'Creatures',
+      locations:  'Locations',
+      weapons:    'Weapons & Artifacts'
+    };
+
+    let data = { characters: [], creatures: [], locations: [], weapons: [] };
+
+    // ── LOGIN ──
+    function doLogin() {
+      const pw = document.getElementById('loginPw').value;
+      if (pw === GM_PASSWORD) {
+        document.getElementById('loginOverlay').style.display = 'none';
+        loadAll();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+
+    document.getElementById('loginPw').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    // ── JSONBIN ──
+    async function loadAll() {
+      setStatus('Loading...');
+      try {
+        const res = await fetch(JSONBIN_URL + '/latest', {
+          headers: { 'X-Master-Key': JSONBIN_KEY }
+        });
+        const json = await res.json();
+        data = json.record || { characters: [], creatures: [], locations: [], weapons: [] };
+        renderAll();
+        setStatus('Loaded successfully');
+        setTimeout(() => setStatus(''), 2000);
+      } catch(e) {
+        setStatus('Load failed');
+        console.error(e);
+      }
+    }
+
+    async function saveAll() {
+      setStatus('Saving...');
+      try {
+        await fetch(JSONBIN_URL, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+          body: JSON.stringify(data)
+        });
+        setStatus('✓ Saved successfully');
+        setTimeout(() => setStatus(''), 3000);
+      } catch(e) {
+        setStatus('✕ Save failed');
+        console.error(e);
+      }
+    }
+
+    function setStatus(msg) {
+      document.getElementById('saveStatus').textContent = msg;
+    }
+
+    // ── ADD ENTRY ──
+    function addEntry() {
+      const cat   = document.getElementById('addCategory').value;
+      const file  = document.getElementById('addFile').value.trim();
+      const title = document.getElementById('addTitle').value.trim();
+
+      if (!file || !title) {
+        alert('Please fill in both the filename and description.');
+        return;
+      }
+
+      if (!data[cat]) data[cat] = [];
+      data[cat].push({ file, title });
+
+      document.getElementById('addFile').value  = '';
+      document.getElementById('addTitle').value = '';
+      updatePreview();
+      renderAll();
+      setStatus('Entry added — remember to save!');
+    }
+
+    // ── REMOVE ENTRY ──
+    function removeEntry(cat, idx) {
+      data[cat].splice(idx, 1);
+      renderAll();
+      setStatus('Entry removed — remember to save!');
+    }
+
+    // ── PREVIEW ──
+    function updatePreview() {
+      const file = document.getElementById('addFile').value.trim();
+      const img  = document.getElementById('previewImg');
+      const ph   = document.getElementById('previewPlaceholder');
+
+      if (file) {
+        img.src = `images/${file}`;
+        img.style.display = 'block';
+        ph.style.display  = 'none';
+        img.onerror = () => {
+          img.style.display = 'none';
+          ph.style.display  = 'block';
+          ph.textContent    = 'Image not found — check filename and make sure it\'s uploaded to GitHub';
+        };
+        img.onload = () => {
+          ph.textContent = 'Image preview will appear here';
+        };
+      } else {
+        img.style.display = 'none';
+        ph.style.display  = 'block';
+        ph.textContent    = 'Image preview will appear here';
+      }
+    }
+
+    // ── RENDER ──
+    function renderAll() {
+      const container = document.getElementById('entriesContainer');
+      container.innerHTML = '';
+
+      for (const [cat, label] of Object.entries(CATEGORY_LABELS)) {
+        const block = document.createElement('div');
+        block.className = 'category-block';
+
+        const title = document.createElement('div');
+        title.className = 'category-block-title';
+        title.textContent = `${label} (${(data[cat] || []).length})`;
+        block.appendChild(title);
+
+        const list = document.createElement('div');
+        list.className = 'entry-list';
+
+        const items = data[cat] || [];
+        if (items.length === 0) {
+          const empty = document.createElement('p');
+          empty.className = 'empty-cat';
+          empty.textContent = 'No entries yet.';
+          list.appendChild(empty);
+        } else {
+          items.forEach((item, idx) => {
+            const row = document.createElement('div');
+            row.className = 'entry-row';
+
+            const thumb = document.createElement('img');
+            thumb.className = 'entry-thumb';
+            thumb.src = `images/${item.file}`;
+            thumb.alt = item.title;
+
+            const info = document.createElement('div');
+            info.className = 'entry-info';
+            info.innerHTML = `<span class="entry-filename">${item.file}</span><span class="entry-title">${item.title}</span>`;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'entry-remove';
+            removeBtn.textContent = '✕';
+            removeBtn.title = 'Remove';
+            removeBtn.onclick = () => removeEntry(cat, idx);
+
+            row.appendChild(thumb);
+            row.appendChild(info);
+            row.appendChild(removeBtn);
+            list.appendChild(row);
+          });
+        }
+
+        block.appendChild(list);
+        container.appendChild(block);
+      }
+    }
+  </script>
+
+</body>
+</html>

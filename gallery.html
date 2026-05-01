@@ -380,7 +380,24 @@
     .fs-nav.prev { left: -60px; }
     .fs-nav.next { right: -60px; }
 
-    /* ── HINT TEXT ── */
+    /* ── LOADING STATE ── */
+    .books-loading {
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 15;
+      font-family: 'Crimson Text', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: rgba(212, 196, 160, 0.6);
+      letter-spacing: 2px;
+      animation: pulse 1.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes pulse { 0%,100%{opacity:0.6} 50%{opacity:0.2} }
+    .books-stage { opacity: 0; transition: opacity 0.4s; }
+    .books-stage.ready { opacity: 1; }
     .desk-hint {
       position: absolute;
       bottom: 3%;
@@ -441,7 +458,8 @@
     </div>
 
     <!-- Books on the desk -->
-    <div class="books-stage">
+    <div class="books-loading" id="booksLoading">Consulting the archive...</div>
+    <div class="books-stage" id="booksStage">
 
       <div class="book-wrapper">
         <div class="book" data-category="characters" id="book-characters">
@@ -620,6 +638,9 @@
         openPanel(book.dataset.category);
       });
     });
+    // Show books, hide loading indicator
+    document.getElementById('booksLoading').style.display = 'none';
+    document.getElementById('booksStage').classList.add('ready');
   });
 
   // ══════════════════════════════════════════════════════════════
@@ -633,7 +654,9 @@
     const grid = document.getElementById('imageGrid');
     grid.innerHTML = '';
 
-    data.items.forEach((item, idx) => {
+    const items = [...data.items].sort(() => Math.random() - 0.5);
+
+    items.forEach((item, idx) => {
       const div = document.createElement('div');
       div.className = 'grid-item';
 
@@ -652,13 +675,13 @@
       maxBtn.title = 'Fullscreen';
       maxBtn.addEventListener('click', e => {
         e.stopPropagation();
-        openFullscreen(idx, data.items);
+        openFullscreen(idx, items);
       });
 
       div.appendChild(img);
       div.appendChild(label);
       div.appendChild(maxBtn);
-      div.addEventListener('click', () => openFullscreen(idx, data.items));
+      div.addEventListener('click', () => openFullscreen(idx, items));
       grid.appendChild(div);
     });
 

@@ -51,6 +51,9 @@
       <button class="active" onclick="switchLore('1-O6s8LK9eSXEqemNnXGDZYmMAprH75NnIjhzrYvRqEo', this)">
         🦇 From the Desk of the Dark Queen of Barovia
       </button>
+      <button onclick="switchLore('1iTPk4hqShg8C8rsfu5HUI3pldZXHG9vq', this)">
+        🗞 The Cobalt Chronicler
+      </button>
       <!-- Add more stories here:
       <button onclick="switchLore('YOUR_DOC_ID_HERE', this)">📜 Story Title</button>
       -->
@@ -58,7 +61,7 @@
 
     <!-- Author card -->
     <div class="content-box" id="authorCard" style="padding: 16px 24px; margin-bottom: 16px; display: flex; align-items: center; gap: 20px;">
-      <img id="authorImage" src="images/prim.webp" alt="Primrose Riverbrand" style="width: 72px; height: 88px; object-fit: cover; object-position: top center; border-radius: 3px; border: 1px solid var(--stone-light); flex-shrink: 0;">
+      <img id="authorImage" src="images/prim.webp" alt="Primrose Riverbranch" style="width: 72px; height: 88px; object-fit: cover; object-position: top center; border-radius: 3px; border: 1px solid var(--stone-light); flex-shrink: 0;">
       <div>
         <div style="font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px; color: var(--gold); opacity: 0.6; text-transform: uppercase; margin-bottom: 4px;">Author</div>
         <div id="authorName" style="font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; color: var(--gold-light);">Primrose Riverbranch</div>
@@ -85,7 +88,12 @@
       '1-O6s8LK9eSXEqemNnXGDZYmMAprH75NnIjhzrYvRqEo': {
         author: 'Primrose Riverbranch',
         title:  'Dark Queen of Barovia',
-        image:  'images/darkqueenprim.webp'
+        image:  'images/prim.webp'
+      },
+      '1iTPk4hqShg8C8rsfu5HUI3pldZXHG9vq': {
+        author: 'Asher Applegate',
+        title:  'Reporter, Cobalt Soul — Editor, The Cobalt Chronicler',
+        image:  'images/asher.png'
       }
       // Add more stories here:
       // 'DOC_ID': { author: 'Character Name', title: 'Character Title', image: 'images/filename.png' }
